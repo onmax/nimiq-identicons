@@ -5,6 +5,7 @@ export default antfu(
   {
     type: 'lib',
     ignores: ['legacy'],
+    formatters: true,
   },
   {
     files: ['**/*.vue'],
