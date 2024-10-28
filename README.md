@@ -94,7 +94,7 @@ const svg = await createIdenticon(input, { format: 'image/svg+xml' })
 
 ### Discontiuned functions
 
-There are functions in the original library that are not included in this implementation because of the lack of use. The function are:
+There are functions in the original library that are not included in this implementation due to lack of use. These functions are:
 
 - `makeLetterHash`
 - `wordsByEntropy`
