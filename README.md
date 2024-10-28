@@ -17,7 +17,7 @@ npm install @onmax/identicons
 import { createIdenticon } from 'identicons'
 
 const input = 'Your input here'
-const svg = await createIdenticon(input, { encodedAsDataUri: true /* false by default */ })
+const svg = await createIdenticon(input)
 ```
 
 > [!WARNING]
@@ -88,7 +88,7 @@ const svg = await Identicons.toDataUri(input)
 import { createIdenticon } from 'identicons'
 
 const input = 'Your input here'
-const svg = await createIdenticon(input, { encodedAsDataUri: true })
+const svg = await createIdenticon(input, { format: 'image/svg+xml' })
 //    ^ type string
 ```
 
