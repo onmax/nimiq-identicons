@@ -16,6 +16,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "browser": "./dist/index.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
@@ -35,8 +36,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
-    "dev": "unbuild --stub",
+    "build": "vite build && vue-tsc --emitDeclarationOnly",
+    "dev": "vite build --watch & pnpm --filter=./playground run dev",
+    "dev:pkg": "vite build --watch",
+    "dev:playground": "pnpm --filter=./playground run dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepublishOnly": "nr build",
@@ -48,7 +51,9 @@
     "optimize-svg": "esno ./scripts/optimize-svgs.ts"
   },
   "dependencies": {
-    "pathe": "^1.1.2"
+    "@unocss/preset-rem-to-px": "^0.63.6",
+    "pathe": "^1.1.2",
+    "vite-plugin-dts": "^4.3.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.3.2",
@@ -66,7 +71,6 @@
     "svgo": "^3.3.2",
     "tiny-glob": "^0.2.9",
     "typescript": "^5.5.4",
-    "unbuild": "^2.0.0",
     "vite": "^5.4.3",
     "vitest": "^2.0.5"
   },

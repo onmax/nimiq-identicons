@@ -27,8 +27,12 @@ export async function createIdenticon(input: string, options: CreateIdenticonOpt
   if (!encodedAsDataUri)
     return svg
 
-  const Buffer = await import('node:buffer').then(b => b.default.Buffer)
-  const base64String = Buffer.from(svg).toString('base64')
+  // Use btoa in browser, Buffer in Node.js
+  const base64String = typeof window !== 'undefined'
+    ? btoa(svg)
+    // eslint-disable-next-line unicorn/prefer-node-protocol
+    : (await import('buffer')).Buffer.from(svg).toString('base64')
+
   const uri = `data:image/svg+xml;base64,${base64String}`
   return uri
 }
