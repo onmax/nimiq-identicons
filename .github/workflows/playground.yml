@@ -41,6 +41,8 @@ jobs:
         uses: actions/configure-pages@v4
       - name: Install dependencies
         run: pnpm  install
+      - name: Build package
+        run: pnpm build
       - name: Build
         run: BASE_URL="/identicons" pnpm --filter playground build
       - name: Upload artifact
