@@ -12,6 +12,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@nimiq/identicons": "^1.6.2",
     "identicons": "workspace:*",
     "vue": "^3.5.12"
   },
@@ -19,6 +20,7 @@
     "@antfu/eslint-config": "^3.8.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.8.1",
+    "@unocss/preset-rem-to-px": "^0.63.6",
     "@unocss/reset": "^0.63.6",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vue/eslint-config-typescript": "^14.1.3",
