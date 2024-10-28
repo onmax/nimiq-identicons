@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "@nimiq/identicons": "^1.6.2",
-    "identicons": "workspace:*",
+    "identicons-esm": "workspace:*",
+    "radix-vue": "^1.9.8",
     "vue": "^3.5.12"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
+    "@iconify-json/nimiq": "https://pkg.pr.new/onmax/nimiq-ui/nimiq-icons@814b6a1",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.8.1",
     "@unocss/preset-rem-to-px": "^0.63.6",

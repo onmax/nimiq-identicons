@@ -5,16 +5,16 @@ A rewrite of the Identicon module with ESM support.
 - Fully typed
 - Runtime agnostic: works in browser, workerd, node, bun...
 - About 2 times faster on startup and 5 times faster on re-rendering
-- Produces about 25% smaller SVG
+- Produces about 25% smaller SVG, thanks to svgo
 
 ## Installation
 
 ```bash
-npm install @onmax/identicons
+npm install identicons-esm
 ```
 
 ```ts
-import { createIdenticon } from 'identicons'
+import { createIdenticon } from 'identicons-esm'
 
 const input = 'Your input here'
 const svg = await createIdenticon(input)
@@ -26,7 +26,7 @@ const svg = await createIdenticon(input)
 ### Getting just a specific color or section of the identicon
 
 ```ts
-import { createIdenticon } from 'identicons'
+import { createIdenticon } from 'identicons-esm'
 
 const input = 'Your input here'
 const { colors, sections } = await getIdenticonsParams(input)
@@ -61,7 +61,7 @@ const svg = await Identicons.svg(input)
 #### Now
 
 ```ts
-import { createIdenticon } from 'identicons'
+import { createIdenticon } from 'identicons-esm'
 
 const input = 'Your input here'
 const svg = await createIdenticon(input)
@@ -85,7 +85,7 @@ const svg = await Identicons.toDataUri(input)
 #### Now
 
 ```ts
-import { createIdenticon } from 'identicons'
+import { createIdenticon } from 'identicons-esm'
 
 const input = 'Your input here'
 const svg = await createIdenticon(input, { format: 'image/svg+xml' })

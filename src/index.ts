@@ -1,1 +1,5 @@
+export * from './colors'
+export { makeHash } from './hash'
 export * from './identicons'
+export { identiconFeatures } from './sections'
+export * from './types'

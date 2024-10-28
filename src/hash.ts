@@ -20,7 +20,7 @@ export function makeHash(input: string): string {
   return hash.padEnd(13, fullHash[5])
 }
 
-export function chaosHash(number: number): number {
+function chaosHash(number: number): number {
   const k = 3.569956786876
   let a_n = 1 / number
   for (let i = 0; i < 100; i++)

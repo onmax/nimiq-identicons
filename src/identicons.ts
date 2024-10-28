@@ -19,7 +19,7 @@ export async function getIdenticonsParams(input: string): Promise<IdenticonParam
   return { sections, colors }
 }
 
-function ensambleSvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top } }: IdenticonParams): string {
+export function ensambleSvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top } }: IdenticonParams): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><defs><clipPath id="a"><path d="m125.8 16.67 31.765 55.015a15.99 15.99 0 0 1 0 16L125.8 142.7c-2.85 4.95-8.135 8-13.85 8H48.415c-5.715 0-11-3.05-13.85-8L2.8 87.685a16.04 16.04 0 0 1 0-16L34.57 16.67a16 16 0 0 1 13.85-8h63.53c5.715 0 11 3.05 13.85 8"/></clipPath></defs><g fill="${accent}" clip-path="url(#a)" color="${main}"><path fill="${background}" d="M0 0h160v160H0z"/><circle cx="80" cy="80" r="40" fill="${main}"/><path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>${top}${sides}${face}${bottom}</g></svg>`
 }
 
@@ -41,8 +41,8 @@ interface CreateIdenticonOptions {
 export async function createIdenticon(input: string, options: CreateIdenticonOptions = {}): Promise<string> {
   const { format = 'svg' } = options
   const params = await getIdenticonsParams(input)
-
   const svg = ensambleSvg(params)
+
   switch (format) {
     case 'image/svg+xml': {
       const base64String = typeof window !== 'undefined'

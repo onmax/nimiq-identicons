@@ -1,6 +1,6 @@
 import { presetRemToPx } from '@unocss/preset-rem-to-px'
 import { presetNimiq } from 'nimiq-css'
-import { defineConfig, presetAttributify, presetUno } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetUno } from 'unocss'
 
 export default defineConfig({
   // ...UnoCSS options
@@ -15,5 +15,6 @@ export default defineConfig({
       fonts: false,
     }),
     presetRemToPx({ baseFontSize: 4 }),
+    presetIcons(),
   ],
 })

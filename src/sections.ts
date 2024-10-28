@@ -5,9 +5,9 @@ const svgModules = {
   top: import.meta.glob('/src/svgs/top/*.svg', { eager: true, query: '?url', import: 'default' }),
   face: import.meta.glob('/src/svgs/face/*.svg', { eager: true, query: '?url', import: 'default' }),
   sides: import.meta.glob('/src/svgs/sides/*.svg', { eager: true, query: '?url', import: 'default' }),
-}
+} as const
 
-const svgCache: Record<string, string> = {}
+export const identiconFeatures: Record<string, string> = {}
 
 // Preload SVGs
 Object.keys(svgModules).forEach((section) => {
@@ -15,7 +15,7 @@ Object.keys(svgModules).forEach((section) => {
     fetch(svgModules[section as Section][path] as string)
       .then(response => response.text())
       .then((svg) => {
-        svgCache[path] = svg
+        identiconFeatures[path] = svg
       })
   }
 })
@@ -26,7 +26,7 @@ async function sectionToSvg(section: Section, index: number): Promise<string> {
   const selector = `${section}_${assetIndex}`
   const svgFile = `/src/svgs/${section}/${selector}.svg`
 
-  const cachedSvg = svgCache[svgFile]
+  const cachedSvg = identiconFeatures[svgFile]
   if (!cachedSvg) {
     console.error(`SVG file not found for ${section} with index ${numIndex}/${index}. Path ${svgFile}`)
     throw new Error(`SVG file not found for ${section} with index ${index}`)
@@ -35,7 +35,7 @@ async function sectionToSvg(section: Section, index: number): Promise<string> {
 }
 
 export async function sectionsToSvg(sectionsIndexes: Record<Section, number>): Promise<Sections> {
-  const [bottom, top, face, sides] = await Promise.all(
+  const [bottom, face, sides, top] = await Promise.all(
     (['bottom', 'face', 'sides', 'top'] as Section[]).map(s => sectionToSvg(s, sectionsIndexes[s])),
   )
   return { bottom, top, sides, face }

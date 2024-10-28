@@ -6,4 +6,10 @@ export default antfu(
     type: 'lib',
     ignores: ['legacy'],
   },
+  {
+    files: ['**/*.vue'],
+    rules: {
+      'ts/explicit-function-return-type': 'off',
+    },
+  },
 )
