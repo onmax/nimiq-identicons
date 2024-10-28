@@ -26,7 +26,7 @@ const svg = await createIdenticon(input)
 ### Getting just a specific color or section of the identicon
 
 ```ts
-import { createIdenticon } from 'identicons-esm'
+import { getIdenticonsParams } from 'identicons-esm'
 
 const input = 'Your input here'
 const { colors, sections } = await getIdenticonsParams(input)
