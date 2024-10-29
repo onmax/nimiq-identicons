@@ -4,8 +4,9 @@ A rewrite of the Identicon module with ESM support.
 
 - Fully typed
 - Runtime agnostic: works in browser, workerd, node, bun...
-- About 2 times faster on startup and 5 times faster on re-rendering
+- About 2 times faster on startup and 5 times faster on re-rendering than previous version
 - Produces about 25% smaller SVG, thanks to svgo
+- Simplify bundling compare to previous version
 
 ## Installation
 
@@ -108,4 +109,5 @@ There are functions in the original library that are not included in this implem
 git clone https://github.com/onmax/identicons
 pnpm install
 pnpm dev
+pnpm optimize-svg # Run just if you modify the content of the svgs
 ```
