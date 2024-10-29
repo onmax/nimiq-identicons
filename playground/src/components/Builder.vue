@@ -5,6 +5,7 @@ import { computed, onMounted, ref } from 'vue'
 import type { Colors, Section, Sections } from 'identicons-esm'
 import PillSelector from './PillSelector.vue'
 
+const props = defineProps<{ input: string }>()
 const initialParams = ref<{ sections: Sections, colors: Colors }>()
 
 interface Svg { path: string, svg: string }
@@ -96,6 +97,7 @@ function select(svg: string) {
 </script>
 
 <template>
+  {{ identicon }}
   <div nq-mb-32 v-html="identicon" />
   <form @submit.prevent="">
     <PillSelector v-model="activeSection" :options mx-auto />

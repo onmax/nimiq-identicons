@@ -8,6 +8,7 @@ export async function svgToPng(svgString: string, size: number): Promise<string>
 
   // Create an image element and load the SVG from the blob URL
   const img = new Image()
+  img.crossOrigin = 'anonymous'
   await new Promise((resolve, reject) => {
     img.onload = resolve
     img.onerror = reject
