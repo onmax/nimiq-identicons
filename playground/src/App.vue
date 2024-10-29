@@ -111,6 +111,9 @@ const isDark = useDark()
             {{ identiconLegacyDuration }}ms
           </p>
         </div>
+        <p text-xs>
+          Not sure how to fix this in production :/
+        </p>
       </div>
     </div>
     <Suspense v-else>
