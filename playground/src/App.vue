@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // @ts-expect-error no types available
 import IdenticonsLegacy from '@nimiq/identicons/dist/identicons.min.js'
-import identiconRaw from '@nimiq/identicons/dist/identicons.min.svg?raw'
 import { useDark, useLocalStorage } from '@vueuse/core'
 import { createIdenticon } from 'identicons-esm'
 import { computed, ref, watch } from 'vue'
@@ -14,7 +13,8 @@ const identiconLegacy = ref<string>('')
 const identiconDuration = ref(0)
 const identiconLegacyDuration = ref(0)
 
-IdenticonsLegacy.svgPath = `data:text/plain;base64,${window.btoa(identiconRaw)}`
+// @ts-expect-error no types available
+window.NIMIQ_IDENTICONS_SVG_PATH = location.pathname.replace(/[^/]*$/, 'dist/identicons.min.svg')
 
 watch(input, async () => {
   if (!input.value)
