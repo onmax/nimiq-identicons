@@ -4,4 +4,4 @@ export type Colors = Record<ColorType, string>
 export type Sections = Record<Section, string>
 export interface IdenticonParams { colors: Colors, sections: Sections }
 
-export type IdenticonFormat = 'svg' | 'image/svg+xml'
+export type IdenticonFormat = 'svg' | 'image/svg+xml' | 'png'

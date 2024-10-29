@@ -29,6 +29,11 @@ interface CreateIdenticonOptions {
    * @default 'svg'
    */
   format?: IdenticonFormat
+  /**
+   * The size of the PNG output in pixels (only used for PNG format)
+   * @default 160
+   */
+  size?: number
 }
 
 /**
@@ -39,7 +44,7 @@ interface CreateIdenticonOptions {
  * @returns The identicon as a string
  */
 export async function createIdenticon(input: string, options: CreateIdenticonOptions = {}): Promise<string> {
-  const { format = 'svg' } = options
+  const { format = 'svg', size = 160 } = options
   const params = await getIdenticonsParams(input)
   const svg = ensambleSvg(params)
 
@@ -50,8 +55,11 @@ export async function createIdenticon(input: string, options: CreateIdenticonOpt
         // eslint-disable-next-line unicorn/prefer-node-protocol
         : (await import('buffer')).Buffer.from(svg).toString('base64')
 
-      const uri = `data:image/svg+xml;base64,${base64String}`
-      return uri
+      return `data:image/svg+xml;base64,${base64String}`
+    }
+    case 'png': {
+      const { svgToPng } = await import('./png')
+      return await svgToPng(svg, size)
     }
     case 'svg':
     default:
