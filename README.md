@@ -8,14 +8,6 @@ A rewrite of the Identicon module with ESM support.
 - Produces about 25% smaller SVG, thanks to svgo
 - Simplify bundling compare to previous version
 
-## Performance Comparison
-
-| Metric                 | Legacy Implementation | Current Implementation |
-| ---------------------- | --------------------- | ---------------------- |
-| First Time Load        | ~20ms                 | ~10ms                  |
-| Already Loaded         | ~6ms                  | ~1ms                   |
-| Average Size Reduction | -                     | 25% smaller            |
-
 ## Installation
 
 ```bash
@@ -49,6 +41,24 @@ const { colors, sections } = await getIdenticonsParams(input)
 // sections.face -> Path to the SVG
 ```
 
+## Why not just use the legacy version?
+
+We were having issues running the lib in workerd. That's it. But then, when I started looking into it, I discovered that we are there was space for improvements.
+
+### Bundling
+
+While `gulp` is great and allows you to build the library, `vite` is the standard these days. With the old implementation, the library loaded all the features of svg into a single DOM element (using `dom-parser`) and from there, depending on the hash, it selected the features for the fiven hash. Then it ensabmages all the selected elements together with a predefined background and colors and runs an optimization process on each render.
+
+With the new approach, we run `svgo` with some defined plugins in dev and write the optimized svg to the folder. Then at runtime we have implemented a system that first checks if the features are in memory, then fallback to indexed DB or otherwise try to fetch from the files. After the selected features have been retrieved, we just ensamlbe the SVG and return it. **We don't use `dom-parser` and we don't need to optimize the SVG at runtime**.
+
+### Performance Comparison
+
+| Metric                 | Legacy Implementation | Current Implementation |
+| ---------------------- | --------------------- | ---------------------- |
+| First Time Load        | ~20ms                 | ~10ms                  |
+| Already Loaded         | ~6ms                  | ~1ms                   |
+| Average Size Reduction | -                     | 25% smaller            |
+
 ## Migrate
 
 Currently part of the implementation has been ported
@@ -60,7 +70,7 @@ Currently part of the implementation has been ported
 ```js
 // @ts-ignore Types no implemented
 import Identicons from '@nimiq/identicons/dist/identicons.min.js'
-IdenticonsLegacy.svgPath = './node_modules/@nimiq/identicons/dist/identicons.min.svg'
+IdenticonsLegacy.svgPath = '@nimiq/identicons/dist/identicons.min.svg'
 
 const input = 'Your input here'
 const svg = await Identicons.svg(input)
@@ -84,7 +94,7 @@ const svg = await createIdenticon(input)
 ```js
 // @ts-ignore Types no implemented
 import Identicons from '@nimiq/identicons/dist/identicons.min.js'
-IdenticonsLegacy.svgPath = './node_modules/@nimiq/identicons/dist/identicons.min.svg'
+IdenticonsLegacy.svgPath = '@nimiq/identicons/dist/identicons.min.svg'
 
 const input = 'Your input here'
 const svg = await Identicons.toDataUri(input)
