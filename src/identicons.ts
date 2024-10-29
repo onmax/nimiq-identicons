@@ -53,7 +53,7 @@ export async function formatIdenticon(svg: string, { format, size }: Required<Cr
 
       return `data:image/svg+xml;base64,${base64String}`
     }
-    case 'png': {
+    case 'image/png': {
       const { svgToPng } = await import('./png')
       return await svgToPng(svg, size)
     }
