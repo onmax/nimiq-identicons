@@ -10,9 +10,7 @@ export default defineConfig({
     presetNimiq({
       attributifyUtilities: true,
       utilities: true,
-      typography: true,
       staticContent: true,
-      fonts: false,
     }),
     presetRemToPx({ baseFontSize: 4 }),
     presetIcons(),

@@ -30,13 +30,13 @@ const activeFeatures = computed(() => {
     return sides.value
   return []
 })
-const activeBottom = ref('')
-const activeTop = ref('')
-const activeFace = ref('')
-const activeSides = ref('')
-const activeMain = ref('')
-const activeAccent = ref('')
-const activeBackground = ref('')
+const activeBottom = useLocalStorage('activeBottom', '')
+const activeTop = useLocalStorage('activeTop', '')
+const activeFace = useLocalStorage('activeFace', '')
+const activeSides = useLocalStorage('activeSides', '')
+const activeMain = useLocalStorage('activeMain', '')
+const activeAccent = useLocalStorage('activeAccent', '')
+const activeBackground = useLocalStorage('activeBackground', '')
 const colors = computed(() => ({
   main: activeMain.value,
   accent: activeAccent.value,
@@ -94,42 +94,73 @@ function select(svg: string) {
       break
   }
 }
+
+async function generateString() {
+  // eslint-disable-next-line no-alert
+  const shouldContinue = confirm('This will trigger a force brute algorithm to find the string. It may take a while, it will block the main thread of this tab, and the only way of stopping is closing the tab. I am not sure really what the consecuences are, but if you continue you have been warn. Do you want to continue?')
+
+  if (!shouldContinue)
+    return
+  const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  while (true) {
+    const str = Array.from({ length: 16 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('')
+    const generated = await getIdenticonsParams(str)
+    const mainOk = generated.colors.main === activeMain.value
+    const accentOk = generated.colors.accent === activeAccent.value
+    const backgroundOk = generated.colors.background === activeBackground.value
+    const bottomOk = generated.sections.bottom === activeBottom.value
+    const topOk = generated.sections.top === activeTop.value
+    const faceOk = generated.sections.face === activeFace.value
+    const sidesOk = generated.sections.sides === activeSides.value
+    if (mainOk && accentOk && backgroundOk && bottomOk && topOk && faceOk && sidesOk) {
+      // eslint-disable-next-line no-alert
+      alert(`The string is: ${str}. You also have it in the console`)
+      // eslint-disable-next-line no-console
+      console.log(str)
+      break
+    }
+  }
+}
 </script>
 
 <template>
-  {{ identicon }}
-  <div nq-mb-32 v-html="identicon" />
-  <form @submit.prevent="">
-    <PillSelector v-model="activeSection" :options mx-auto />
-    <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>
-      <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>
-        <button group bg-transparent @click="select(svg)">
-          <div v-html="getSvg(svg)" />
-          <span rounded-2 bg-neutral-300 px-8 py-3 font-mono op-0 text-lg group-hocus:op-100>{{ path.split('/').slice(3).join('/') }}</span>
-        </button>
-      </li>
-    </ul>
-    <div v-if="activeSection === 'colors'" w-full nq-mt-32>
-      <label flex="~ items-center gap-8">
-        <span mr-auto text-10 nq-label>Main color</span>
-        <div v-for="color in identiconColors" :key="color">
-          <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeMain = color" />
-        </div>
-      </label>
+  <div>
+    <div mx-auto size-156 v-html="identicon" />
+    <form nq-mt-32 @submit.prevent="">
+      <PillSelector v-model="activeSection" :options mx-auto />
+      <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>
+        <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>
+          <button group bg-transparent @click="select(svg)">
+            <div v-html="getSvg(svg)" />
+            <span rounded-2 bg-neutral-300 px-8 py-3 font-mono op-0 text-lg group-hocus:op-100>{{ path.split('/').slice(3).join('/') }}</span>
+          </button>
+        </li>
+      </ul>
+      <div v-if="activeSection === 'colors'" w-full nq-mt-32>
+        <label flex="~ items-center gap-8">
+          <span mr-auto text-10 nq-label>Main color</span>
+          <div v-for="color in identiconColors" :key="color">
+            <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeMain = color" />
+          </div>
+        </label>
 
-      <label flex="~ items-center gap-8" nq-mt-32>
-        <span mr-auto text-10 nq-label>Background color</span>
-        <div v-for="color in identiconColors" :key="color">
-          <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
-        </div>
-      </label>
+        <label flex="~ items-center gap-8" nq-mt-32>
+          <span mr-auto text-10 nq-label>Background color</span>
+          <div v-for="color in identiconColors" :key="color">
+            <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
+          </div>
+        </label>
 
-      <label flex="~ items-center gap-8" nq-mt-32>
-        <span mr-auto text-10 nq-label>Accent color</span>
-        <div v-for="color in identiconColors" :key="color">
-          <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
-        </div>
-      </label>
-    </div>
-  </form>
+        <label flex="~ items-center gap-8" nq-mt-32>
+          <span mr-auto text-10 nq-label>Accent color</span>
+          <div v-for="color in identiconColors" :key="color">
+            <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
+          </div>
+        </label>
+      </div>
+    </form>
+    <button nq-pill-sm mx-auto mb-96 mt-48 nq-pill-blue @click="generateString">
+      Find a string that generates this identicon
+    </button>
+  </div>
 </template>
