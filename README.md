@@ -8,6 +8,14 @@ A rewrite of the Identicon module with ESM support.
 - Produces about 25% smaller SVG, thanks to svgo
 - Simplify bundling compare to previous version
 
+## Performance Comparison
+
+| Metric                 | Legacy Implementation | Current Implementation |
+| ---------------------- | --------------------- | ---------------------- |
+| First Time Load        | ~20ms                 | ~10ms                  |
+| Already Loaded         | ~6ms                  | ~1ms                   |
+| Average Size Reduction | -                     | 25% smaller            |
+
 ## Installation
 
 ```bash

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
-import { ensambleSvg, getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm'
+import { ensambleSvg, getIdenticonsFeatures, getIdenticonsParams, colors as identiconColors } from 'identicons-esm'
 import { computed, onMounted, ref } from 'vue'
 import type { Colors, Section, Sections } from 'identicons-esm'
 import PillSelector from './PillSelector.vue'
@@ -11,22 +11,12 @@ const initialParams = ref<{ sections: Sections, colors: Colors }>()
 
 interface Svg { path: string, svg: string }
 
-const bottom = ref<Svg[]>([])
-const top = ref<Svg[]>([])
-const face = ref<Svg[]>([])
-const sides = ref<Svg[]>([])
-
-// Process each path
-Object.entries(identiconFeatures).forEach(([path, svg]) => {
-  if (path.includes('bottom'))
-    bottom.value.push({ path, svg })
-  if (path.includes('top'))
-    top.value.push({ path, svg })
-  if (path.includes('face'))
-    face.value.push({ path, svg })
-  if (path.includes('sides'))
-    sides.value.push({ path, svg })
-})
+const features = await getIdenticonsFeatures()
+const entries = Object.entries(features)
+const bottom = ref<Svg[]>(entries.filter(([path]) => path.includes('bottom')).map(([path, svg]) => ({ path, svg })))
+const top = ref<Svg[]>(entries.filter(([path]) => path.includes('top')).map(([path, svg]) => ({ path, svg })))
+const face = ref<Svg[]>(entries.filter(([path]) => path.includes('face')).map(([path, svg]) => ({ path, svg })))
+const sides = ref<Svg[]>(entries.filter(([path]) => path.includes('sides')).map(([path, svg]) => ({ path, svg })))
 
 const options = ['bottom', 'top', 'face', 'sides', 'colors']
 const activeSection = useLocalStorage<Section | 'colors'>('active-variant', 'bottom')
@@ -113,31 +103,31 @@ function select(svg: string) {
     <PillSelector v-model="activeSection" :options mx-auto />
     <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>
       <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>
-        <button bg-transparent group @click="select(svg)">
+        <button group bg-transparent @click="select(svg)">
           <div v-html="getSvg(svg)" />
-          <span text-lg bg-neutral-300 px-8 py-3 rounded-2 font-mono group-hocus:op-100 op-0>{{ path.split('/').slice(3).join('/') }}</span>
+          <span rounded-2 bg-neutral-300 px-8 py-3 font-mono op-0 text-lg group-hocus:op-100>{{ path.split('/').slice(3).join('/') }}</span>
         </button>
       </li>
     </ul>
-    <div v-if="activeSection === 'colors'" nq-mt-32 w-full>
+    <div v-if="activeSection === 'colors'" w-full nq-mt-32>
       <label flex="~ items-center gap-8">
-        <span nq-label text-10 mr-auto>Main color</span>
+        <span mr-auto text-10 nq-label>Main color</span>
         <div v-for="color in identiconColors" :key="color">
-          <div size-20 :style="`background: ${color}`" rounded-full cursor-pointer @click="activeMain = color" />
+          <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeMain = color" />
         </div>
       </label>
 
       <label flex="~ items-center gap-8" nq-mt-32>
-        <span nq-label text-10 mr-auto>Background color</span>
+        <span mr-auto text-10 nq-label>Background color</span>
         <div v-for="color in identiconColors" :key="color">
-          <div size-20 :style="`background: ${color}`" rounded-full cursor-pointer @click="activeBackground = color" />
+          <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
         </div>
       </label>
 
       <label flex="~ items-center gap-8" nq-mt-32>
-        <span nq-label text-10 mr-auto>Accent color</span>
+        <span mr-auto text-10 nq-label>Accent color</span>
         <div v-for="color in identiconColors" :key="color">
-          <div size-20 :style="`background: ${color}`" rounded-full cursor-pointer @click="activeAccent = color" />
+          <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
         </div>
       </label>
     </div>

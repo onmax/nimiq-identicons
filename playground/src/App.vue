@@ -47,10 +47,10 @@ const isDark = useDark()
 </script>
 
 <template>
-  <header max-w-1400 flex="~ items-center justify-between" px-32 py-20 mx-auto w-full>
+  <header flex="~ items-center justify-between" mx-auto max-w-1400 w-full px-32 py-20>
     <a href="/" flex="~ items-center gap-8">
       <div i-nimiq:logos-nimiq-horizontal dark:i-nimiq:logos-nimiq-white-horizontal text-21 />
-      <span text-lg mt--1>Identicons</span>
+      <span mt--1 text-lg>Identicons</span>
     </a>
     <div flex="~ items-center gap-24">
       <input v-model="isDark" type="checkbox" nq-switch style="--active-color: rgb(var(--nq-neutral-400))">
@@ -59,34 +59,34 @@ const isDark = useDark()
       </a>
     </div>
   </header>
-  <main px-32 flex="~ col justify-center items-center" max-w-1400 mx-auto>
-    <h1 text-xl nq-mt-32 lh-none>
+  <main flex="~ col justify-center items-center" mx-auto max-w-1400 px-32>
+    <h1 lh-none text-xl nq-mt-32>
       Nimiq Identicons Playground
     </h1>
     <form v-show="!builderMode" nq-mt-32 @submit.prevent>
-      <input v-model="input" type="text" text-lg placeholder="Enter something..." nq-input-box rounded-full>
+      <input v-model="input" type="text" placeholder="Enter something..." rounded-full text-lg nq-input-box>
     </form>
 
-    <label flex="~ gap-8" text-sm text-right self-end justify-self-end nq-mt-16>
+    <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
       <input v-model="showLegacy" type="checkbox" nq-switch>
       Show Legacy implementation
     </label>
-    <label flex="~ gap-8" text-sm text-right self-end justify-self-end nq-mt-16>
+    <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
       <input v-model="builderMode" type="checkbox" nq-switch>
       Builder mode
     </label>
 
-    <div v-if="!builderMode" flex="~ gap-8 col md:row justify-around" nq-mt-32 w-full>
+    <div v-if="!builderMode" flex="~ gap-8 col md:row justify-around" w-full nq-mt-32>
       <div flex="~ items-center col">
-        <h2 v-show="showLegacy" text="xs blue" rounded-full nq-label font-semibold ring="1.5 blue/60" w-max px-8 py-3>
+        <h2 v-show="showLegacy" text="xs blue" ring="1.5 blue/60" w-max rounded-full px-8 py-3 font-semibold nq-label>
           New
         </h2>
         <img :src="identicon" alt="" nq-mt-16>
-        <div v-show="showLegacy" flex="~ items-center" nq-label text-xs>
+        <div v-show="showLegacy" flex="~ items-center" text-xs nq-label>
           <p title="size of the svg as data URI">
             {{ identiconSize }}kb
           </p>
-          <div self-stretch w-px bg-neutral-800 mx-16 />
+          <div mx-16 w-px self-stretch bg-neutral-800 />
           <p lowercase title="time to compute">
             {{ identiconDuration }}ms
           </p>
@@ -94,7 +94,7 @@ const isDark = useDark()
       </div>
 
       <div v-if="showLegacy" flex="~ col items-center">
-        <h2 v-show="showLegacy" text="xs neutral-700" rounded-full nq-label font-semibold ring="1.5 neutral-500" w-max px-8 py-3>
+        <h2 v-show="showLegacy" text="xs neutral-700" ring="1.5 neutral-500" w-max rounded-full px-8 py-3 font-semibold nq-label>
           Legacy
         </h2>
         <img :src="identiconLegacy" alt="" nq-mt-16>
@@ -103,13 +103,15 @@ const isDark = useDark()
           <p title="size of the svg as data URI">
             {{ identiconLegacySize }}kb
           </p>
-          <div self-stretch w-px bg-neutral-800 mx-16 />
+          <div mx-16 w-px self-stretch bg-neutral-800 />
           <p lowercase title="time to compute">
             {{ identiconLegacyDuration }}ms
           </p>
         </div>
       </div>
     </div>
-    <Builder v-else :input />
+    <Suspense v-else>
+      <Builder :input />
+    </Suspense>
   </main>
 </template>
