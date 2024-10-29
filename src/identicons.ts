@@ -20,7 +20,7 @@ export async function getIdenticonsParams(input: string): Promise<IdenticonParam
 }
 
 export function ensambleSvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top } }: IdenticonParams): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><defs><clipPath id="a"><path d="m125.8 16.67 31.765 55.015a15.99 15.99 0 0 1 0 16L125.8 142.7c-2.85 4.95-8.135 8-13.85 8H48.415c-5.715 0-11-3.05-13.85-8L2.8 87.685a16.04 16.04 0 0 1 0-16L34.57 16.67a16 16 0 0 1 13.85-8h63.53c5.715 0 11 3.05 13.85 8"/></clipPath></defs><g fill="${accent}" clip-path="url(#a)" color="${main}"><path fill="${background}" d="M0 0h160v160H0z"/><circle cx="80" cy="80" r="40" fill="${main}"/><path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>${top}${sides}${face}${bottom}</g></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><defs><clipPath id="a"><path d="m125.8 16.67 31.765 55.015a15.99 15.99 0 0 1 0 16L125.8 142.7c-2.85 4.95-8.135 8-13.85 8H48.415c-5.715 0-11-3.05-13.85-8L2.8 87.685a16.04 16.04 0 0 1 0-16L34.57 16.67a16 16 0 0 1 13.85-8h63.53c5.715 0 11 3.05 13.85 8"/></clipPath></defs><g fill="${accent}" clip-path="url(#a)" color="${main}"><path fill="${background}" d="M0 0h160v160H0z"/><circle cx="80" cy="80" r="40" fill="${main}"/><path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>${top}${sides}${face}${bottom}</g></svg>`
 }
 
 interface CreateIdenticonOptions {
@@ -59,4 +59,4 @@ export async function createIdenticon(input: string, options: CreateIdenticonOpt
   }
 }
 
-export const identiconPlaceholder = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 -4 64 64"><path fill="url(#a)" d="M62.3 25.4 49.2 2.6A5.3 5.3 0 0 0 44.6 0H18.4c-1.9 0-3.6 1-4.6 2.6L.7 25.4c-1 1.6-1 3.6 0 5.2l13.1 22.8c1 1.6 2.7 2.6 4.6 2.6h26.2c1.9 0 3.6-1 4.6-2.6l13-22.8c1-1.6 1-3.6.1-5.2z" opacity=".1"/><defs><radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-63.0033 0 0 -56 63 56)" gradientUnits="userSpaceOnUse"><stop stop-color="#260133"/><stop offset="1" stop-color="#1F2348"/></radialGradient></defs></svg>`
+export const identiconPlaceholder = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" viewBox="0 -4 64 64"><path fill="url(#a)" d="M62.3 25.4 49.2 2.6A5.3 5.3 0 0 0 44.6 0H18.4c-1.9 0-3.6 1-4.6 2.6L.7 25.4c-1 1.6-1 3.6 0 5.2l13.1 22.8c1 1.6 2.7 2.6 4.6 2.6h26.2c1.9 0 3.6-1 4.6-2.6l13-22.8c1-1.6 1-3.6.1-5.2z" opacity=".1"/><defs><radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-63.0033 0 0 -56 63 56)" gradientUnits="userSpaceOnUse"><stop stop-color="#260133"/><stop offset="1" stop-color="#1F2348"/></radialGradient></defs></svg>`
