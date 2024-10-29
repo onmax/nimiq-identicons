@@ -5,13 +5,13 @@
   "packageManager": "pnpm@9.9.0",
   "description": "A rewrite of the Identicon module with ESM",
   "license": "MIT",
-  "homepage": "https://github.com/onmax/identicons#readme",
+  "homepage": "https://github.com/onmax/nimiq-identicons#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/onmax/identicons.git"
+    "url": "git+https://github.com/onmax/nimiq-identicons.git"
   },
   "bugs": {
-    "url": "https://github.com/onmax/identicons/issues"
+    "url": "https://github.com/onmax/nimiq-identicons/issues"
   },
   "keywords": [],
   "sideEffects": false,

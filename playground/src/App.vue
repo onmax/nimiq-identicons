@@ -57,7 +57,7 @@ const isDark = useDark()
     </a>
     <div flex="~ items-center gap-24">
       <input v-model="isDark" type="checkbox" nq-switch style="--active-color: rgb(var(--nq-neutral-400))">
-      <a href="https://github.com/onmax/identicons" target="_blank" rel="noopener noreferrer" un-text="lg neutral-900 hocus:neutral">
+      <a href="https://github.com/onmax/nimiq-identicons" target="_blank" rel="noopener noreferrer" un-text="lg neutral-900 hocus:neutral">
         <div i-nimiq:logos-github-mono />
       </a>
     </div>

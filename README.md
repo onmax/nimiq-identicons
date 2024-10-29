@@ -124,7 +124,7 @@ There are functions in the original library that are not included in this implem
 ## Development
 
 ```bash
-git clone https://github.com/onmax/identicons
+git clone https://github.com/onmax/nimiq-identicons
 pnpm install
 pnpm dev
 pnpm optimize-svg # Run just if you modify the content of the svgs
