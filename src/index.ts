@@ -1,5 +1,5 @@
 export * from './colors'
 export { makeHash } from './hash'
 export * from './identicons'
-export { getIdenticonsFeatures } from './sections'
+export * from './sections'
 export * from './types'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
-import { ensambleSvg, getIdenticonsFeatures, getIdenticonsParams, colors as identiconColors } from 'identicons-esm'
+import { ensambleSvg, getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm'
 import { computed, onMounted, ref } from 'vue'
 import type { Colors, Section, Sections } from 'identicons-esm'
 import PillSelector from './PillSelector.vue'
@@ -10,8 +10,7 @@ const initialParams = ref<{ sections: Sections, colors: Colors }>()
 
 interface Svg { path: string, svg: string }
 
-const features = await getIdenticonsFeatures()
-const entries = Object.entries(features)
+const entries = Object.entries(identiconFeatures)
 const bottom = ref<Svg[]>(entries.filter(([path]) => path.includes('bottom')).map(([path, svg]) => ({ path, svg })))
 const top = ref<Svg[]>(entries.filter(([path]) => path.includes('top')).map(([path, svg]) => ({ path, svg })))
 const face = ref<Svg[]>(entries.filter(([path]) => path.includes('face')).map(([path, svg]) => ({ path, svg })))

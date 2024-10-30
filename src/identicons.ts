@@ -40,10 +40,9 @@ export function ensambleSvg({ colors: { accent, background, main }, sections: { 
  * @param svg - The SVG string to format
  * @param options - Object containing format and size options
  * @param options.format - The desired output format. See {@link IdenticonFormat}
- * @param options.size - The size in pixels for PNG output
  * @returns Promise containing the formatted identicon string
  */
-export async function formatIdenticon(svg: string, { format, size }: Required<CreateIdenticonOptions>): Promise<string> {
+export async function formatIdenticon(svg: string, { format }: Required<CreateIdenticonOptions>): Promise<string> {
   switch (format) {
     case 'image/svg+xml': {
       const base64String = typeof window !== 'undefined'
@@ -52,10 +51,6 @@ export async function formatIdenticon(svg: string, { format, size }: Required<Cr
         : (await import('buffer')).Buffer.from(svg).toString('base64')
 
       return `data:image/svg+xml;base64,${base64String}`
-    }
-    case 'image/png': {
-      const { svgToPng } = await import('./png')
-      return await svgToPng(svg, size)
     }
     case 'svg':
     default:
@@ -69,11 +64,6 @@ interface CreateIdenticonOptions {
    * @default 'svg'
    */
   format?: IdenticonFormat
-  /**
-   * The size of the PNG output in pixels (only used for PNG format)
-   * @default 160
-   */
-  size?: number
 }
 
 /**
@@ -84,10 +74,10 @@ interface CreateIdenticonOptions {
  * @returns The identicon as a string
  */
 export async function createIdenticon(input: string, options: CreateIdenticonOptions = {}): Promise<string> {
-  const { format = 'svg', size = 160 } = options
+  const { format = 'svg' } = options
   const params = await getIdenticonsParams(input)
   const svg = ensambleSvg(params)
-  const formatted = await formatIdenticon(svg, { format, size })
+  const formatted = await formatIdenticon(svg, { format })
   return formatted
 }
 

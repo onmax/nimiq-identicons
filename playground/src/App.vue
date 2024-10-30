@@ -13,9 +13,6 @@ const identiconLegacy = ref<string>('')
 const identiconDuration = ref(0)
 const identiconLegacyDuration = ref(0)
 
-// @ts-expect-error no types available
-window.NIMIQ_IDENTICONS_SVG_PATH = location.pathname.replace(/[^/]*$/, 'dist/identicons.min.svg')
-
 watch(input, async () => {
   if (!input.value)
     return
