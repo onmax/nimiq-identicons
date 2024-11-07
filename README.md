@@ -2,6 +2,8 @@
 
 A rewrite of the Identicon module with ESM support.
 
+[Docs preview](https://deploy-preview-78--developer-center.netlify.app/build/ui/identicons#nimiq-identicons)
+
 - Fully typed
 - Runtime agnostic: works in browser, workerd, node, bun...
 - About 2 times faster on startup and 5 times faster on re-rendering than previous version
