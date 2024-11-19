@@ -1,19 +1,4 @@
-import { makeHash } from './hash'
 import type { Colors, ColorType } from './types'
-
-// Color arrays
-export const colorNames = [
-  'Orange',
-  'Red',
-  'Yellow',
-  'Indigo',
-  'Blue',
-  'Purple',
-  'Teal',
-  'Pink',
-  'Green',
-  'Brown',
-] as const
 
 export const colors = [
   '#FC8702',
@@ -53,10 +38,4 @@ export function colorsToRgb({ main, background, accent }: Record<ColorType, numb
     background: backgroundColors[background],
     accent: colors[accent],
   }
-}
-
-export function getBackgroundColorName(text: string): string {
-  const hash = makeHash(text)
-  const index = Number.parseInt(hash[2], 10) % 10
-  return colorNames[index]
 }
