@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-
+import 'identicons-esm'
 import 'virtual:uno.css'
 
-createApp(App).mount('#app')
+// Tell Vue about the custom element to avoid warnings
+const app = createApp(App)
+app.mount('#app')

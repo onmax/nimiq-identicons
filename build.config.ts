@@ -12,6 +12,11 @@ export default defineBuildConfig({
       name: 'index.min',
       builder: 'rollup',
     },
+    {
+      input: 'web-components',
+      name: 'web-components',
+      builder: 'rollup',
+    },
   ],
   declaration: true,
   clean: true,

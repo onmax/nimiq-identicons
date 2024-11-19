@@ -9,7 +9,13 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   base: env.BASE_URL,
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: tag => tag === 'nimiq-identicon',
+        },
+      },
+    }),
     vueDevTools(),
     UnoCSS(),
   ],
