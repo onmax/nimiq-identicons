@@ -2,6 +2,8 @@
 import { useLocalStorage } from '@vueuse/core'
 
 const input = useLocalStorage('web-component-input', 'nimiq')
+
+const fancy = useLocalStorage('web-component-fancy', false)
 </script>
 
 <template>
@@ -16,9 +18,12 @@ const input = useLocalStorage('web-component-input', 'nimiq')
         nq-input-box
       >
     </div>
-
+    <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
+      <input v-model="fancy" type="checkbox" nq-switch>
+      Show Fancy
+    </label>
     <div flex="~ col items-center gap-16">
-      <nimiq-identicon :input="input" />
+      <nimiq-identicon :fancy :input />
       <div op-50 text-sm>
         This is rendered using the Web Component
       </div>
@@ -27,7 +32,7 @@ const input = useLocalStorage('web-component-input', 'nimiq')
     <div flex="~ col gap-8" op-70 text-sm>
       <p>To use the web component in your project:</p>
       <pre rounded-8 rounded-lg bg-neutral-300 p-16>
-import 'identicons-esm/web-component'
+import 'identicons-esm'
 
 // Then in your HTML:
 &lt;nimiq-identicon input="hello@example.com">&lt;/nimiq-identicon></pre>

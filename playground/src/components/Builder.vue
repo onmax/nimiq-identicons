@@ -57,7 +57,6 @@ onMounted(async () => {
   activeAccent.value = initialParams.value?.colors.accent
   activeBackground.value = initialParams.value?.colors.background
 })
-const identicon = computed(() => ensambleSvg({ colors: colors.value, sections: sections.value }))
 
 function getSvg(svgContent: string) {
   const { accent, main } = initialParams.value?.colors || { accent: '#000', main: '#fff' }
@@ -120,12 +119,20 @@ async function generateString() {
     }
   }
 }
+
+const showFancy = useLocalStorage('show-fancy', false)
+
+const identicon = computed(() => ensambleSvg({ colors: colors.value, sections: sections.value }, { fancy: showFancy.value }))
 </script>
 
 <template>
   <div>
     <div mx-auto size-156 v-html="identicon" />
     <form nq-mt-32 @submit.prevent="">
+      <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
+        <input v-model="showFancy" type="checkbox" nq-switch>
+        Show Fancy
+      </label>
       <PillSelector v-model="activeSection" :options mx-auto />
       <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>
         <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>

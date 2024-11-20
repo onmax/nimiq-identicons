@@ -4,20 +4,31 @@ const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; 
 const placeholder = `${hostStyles}${identiconPlaceholder}`
 
 export class IdenticonElement extends HTMLElement {
-  static observedAttributes = ['input', 'format']
+  static observedAttributes = ['input', 'fancy']
 
   private shadow: ShadowRoot
+  private fancyFlag = false
+  private currentInput = ''
 
   constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
-    // Add debug styles
     this.shadow.innerHTML = placeholder
+
+    this.fancyFlag = this.hasAttribute('fancy')
   }
 
-  async attributeChangedCallback(name: string, _oldValue: string, newValue: string): Promise<void> {
-    if (name === 'input')
-      await this.updateIdenticon(newValue)
+  async attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): Promise<void> {
+    if (name === 'input') {
+      this.currentInput = newValue || ''
+      await this.updateIdenticon(this.currentInput)
+    }
+    else if (name === 'fancy') {
+      this.fancyFlag = (!!newValue || newValue === '') && newValue !== 'false'
+      if (this.currentInput) {
+        await this.updateIdenticon(this.currentInput)
+      }
+    }
   }
 
   private async updateIdenticon(input: string): Promise<void> {
@@ -27,9 +38,7 @@ export class IdenticonElement extends HTMLElement {
     }
 
     try {
-      const identicon = await createIdenticon(input)
-
-      // First set styles to maintain them
+      const identicon = await createIdenticon(input, { fancy: this.fancyFlag })
       this.shadow.innerHTML = `${hostStyles}${identicon}`
     }
     catch (error) {
