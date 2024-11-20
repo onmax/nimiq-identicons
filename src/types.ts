@@ -14,19 +14,13 @@ export interface CreateIdenticonOptions {
   format?: IdenticonFormat
 }
 
-export enum IdenticonMaterial {
-  Bronze = 'bronze',
-  Silver = 'silver',
-  Gold = 'gold',
-  Platinum = 'platinum',
-  None = 'none',
-}
+export type IdenticonMaterial = 'bronze' | 'silver' | 'gold' | 'platinum'
 
 export type CreateShinyIdenticonOptions = CreateIdenticonOptions & {
   /**
-   * The border color of the shiny identicon
+   * The border color of the shiny identicon. @see{@link IdenticonMaterial}
    *
    * @default 'none'
    */
-  material: IdenticonMaterial
+  material: 'bronze' | 'silver' | 'gold' | 'platinum'
 }

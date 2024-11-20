@@ -1,5 +1,7 @@
-import { defaultBackgroundShape, defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams } from './core'
+import { defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams } from './core'
 import type { CreateIdenticonOptions, IdenticonParams } from './types'
+
+export const defaultBackgroundShape = `<path d="m126.074 16.999 31.955 55.003a15.92 15.92 0 0 1 2.159 7.999 15.93 15.93 0 0 1-2.159 7.998l-31.955 55.003c-2.867 4.949-8.183 7.998-13.933 7.998H48.225c-5.75 0-11.066-3.049-13.933-7.998L2.337 87.999a15.96 15.96 0 0 1 0-15.997l31.96-55.003a16.048 16.048 0 0 1 5.89-5.854A16.173 16.173 0 0 1 48.23 9h63.91c5.75 0 11.066 3.05 13.933 7.999Z"/>`
 
 /**
  * Assembles an SVG string from the provided identicon parameters
@@ -12,7 +14,7 @@ export function ensambleSvg({ colors: { accent, background, main }, sections: { 
   innerShadow ||= defaultShadow
   backgroundShape ||= defaultBackgroundShape
   circleShape ||= defaultCircleShape(main)
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" preserveAspectRatio><defs><clipPath id="a">${backgroundShape}</clipPath></defs><g fill="${accent}" clip-path="url(#a)" color="${main}"><path fill="${background}" d="M0 0h160v160H0z"/>${circleShape}${innerShadow}${top}${sides}${face}${bottom}</g></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><defs><clipPath id="a">${backgroundShape}</clipPath></defs><path fill="${background}" d="M0 0h160v160H0z" clip-path="url(#a)"/><g fill="${accent}" clip-path="url(#a)" color="${main}">${circleShape}${innerShadow}${top}${sides}${face}${bottom}</g></svg>`
 }
 
 /**

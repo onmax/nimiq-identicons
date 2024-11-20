@@ -50,7 +50,7 @@ function optimizeSvg(svg: string): string {
 }
 
 async function processFiles() {
-  const base = join(cwd(), './src/svgs')
+  const base = join(cwd(), './src/features')
 
   await mkdir(join(base, 'optimized/top'), { recursive: true })
   await mkdir(join(base, 'optimized/bottom'), { recursive: true })

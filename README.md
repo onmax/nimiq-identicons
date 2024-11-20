@@ -129,5 +129,5 @@ There are functions in the original library that are not included in this implem
 git clone https://github.com/onmax/nimiq-identicons
 pnpm install
 pnpm dev
-pnpm optimize-svg # Run just if you modify the content of the svgs
+pnpm optimize-svg # Run just if you modify the content of the features
 ```

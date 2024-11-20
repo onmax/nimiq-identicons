@@ -3,6 +3,7 @@
 import IdenticonsLegacy from '@nimiq/identicons/dist/identicons.min.js'
 import { useLocalStorage } from '@vueuse/core'
 import { createIdenticon } from 'identicons-esm'
+import { createShinyIdenticon } from 'identicons-esm/shiny'
 import { computed, ref, watch } from 'vue'
 
 const identicon = ref<string>('')
@@ -11,20 +12,23 @@ const identiconDuration = ref(0)
 const identiconLegacyDuration = ref(0)
 
 const input = useLocalStorage('input-default', 'nimiq')
-watch(input, async () => {
+const showShiny = useLocalStorage('show-shiny', false)
+watch([input, showShiny], async () => {
   if (!input.value)
     return
   const start = performance.now()
-  identicon.value = await createIdenticon(input.value, { format: 'image/svg+xml' })
+  identicon.value = showShiny.value
+    ? await createShinyIdenticon(input.value, { format: 'image/svg+xml', material: 'bronze' })
+    : await createIdenticon(input.value, { format: 'image/svg+xml' })
   const end = performance.now()
   identiconDuration.value = Number((end - start).toFixed(2))
 }, { immediate: true })
 
+IdenticonsLegacy.svgPath = './node_modules/@nimiq/identicons/dist/identicons.min.svg'
 watch(input, async () => {
   if (!input.value)
     return
   const start = performance.now()
-  IdenticonsLegacy.svgPath = './node_modules/@nimiq/identicons/dist/identicons.min.svg'
   identiconLegacy.value = await IdenticonsLegacy.toDataUrl(input.value)
   const end = performance.now()
   identiconLegacyDuration.value = Number((end - start).toFixed(2))
@@ -37,8 +41,6 @@ function getStrSize(str: string): number {
 
 const identiconSize = computed(() => getStrSize(identicon.value))
 const identiconLegacySize = computed(() => getStrSize(identiconLegacy.value))
-
-const showShiny = useLocalStorage('show-shiny', false)
 </script>
 
 <template>
@@ -64,7 +66,7 @@ const showShiny = useLocalStorage('show-shiny', false)
         <h2 text="xs blue" ring="1.5 blue/60" w-max rounded-full px-16 py-4 font-semibold nq-label>
           New
         </h2>
-        <img :src="identicon" alt="" nq-mt-16>
+        <img :src="identicon" size-160 alt="" nq-mt-16>
         <div flex="~ items-center" text-xs nq-label>
           <p title="size of the svg as data URI">
             {{ identiconSize }}kb

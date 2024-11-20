@@ -62,11 +62,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && cp -r src/features/optimized dist/features",
     "dev": "pnpm optimize-svg && vite build --watch & pnpm --filter=./playground run dev",
     "dev:pkg": "vite build --watch",
     "dev:playground": "pnpm --filter=./playground run dev",
-    "optimize-svg": "esno ./scripts/optimize-svgs.ts",
+    "optimize-svg": "esno ./scripts/optimize-features.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepublishOnly": "nr build",
