@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// @ts-expect-error no types available
 import { useDark, useLocalStorage } from '@vueuse/core'
 import Builder from './components/Builder.vue'
 import DefaultDemo from './components/DefaultDemo.vue'
