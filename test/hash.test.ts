@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+// @ts-expect-error no types
 import { makeHash as legacyMakeHash } from '../legacy/src/js/hash'
 import { makeHash as newMakeHash } from '../src/core'
 
