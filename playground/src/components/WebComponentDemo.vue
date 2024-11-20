@@ -3,7 +3,7 @@ import { useLocalStorage } from '@vueuse/core'
 
 const input = useLocalStorage('web-component-input', 'nimiq')
 
-const fancy = useLocalStorage('web-component-fancy', false)
+const shiny = useLocalStorage('web-component-shiny', false)
 </script>
 
 <template>
@@ -19,11 +19,11 @@ const fancy = useLocalStorage('web-component-fancy', false)
       >
     </div>
     <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
-      <input v-model="fancy" type="checkbox" nq-switch>
-      Show Fancy
+      <input v-model="shiny" type="checkbox" nq-switch>
+      Show Shiny
     </label>
     <div flex="~ col items-center gap-16">
-      <nimiq-identicon :fancy :input />
+      <nimiq-identicon :shiny :input />
       <div op-50 text-sm>
         This is rendered using the Web Component
       </div>

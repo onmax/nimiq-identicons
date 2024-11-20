@@ -39,7 +39,7 @@ const identiconSize = computed(() => getStrSize(identicon.value))
 const identiconLegacySize = computed(() => getStrSize(identiconLegacy.value))
 
 const showLegacy = useLocalStorage('show-legacy', false)
-const showFancy = useLocalStorage('show-fancy', false)
+const showShiny = useLocalStorage('show-shiny', false)
 </script>
 
 <template>
@@ -61,8 +61,8 @@ const showFancy = useLocalStorage('show-fancy', false)
     </label>
 
     <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
-      <input v-model="showFancy" type="checkbox" nq-switch>
-      Show Fancy
+      <input v-model="showShiny" type="checkbox" nq-switch>
+      Show Shiny
     </label>
 
     <div flex="~ gap-8 col md:row justify-around" w-full nq-mt-32>

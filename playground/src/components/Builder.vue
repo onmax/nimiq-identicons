@@ -120,9 +120,9 @@ async function generateString() {
   }
 }
 
-const showFancy = useLocalStorage('show-fancy', false)
+const showShiny = useLocalStorage('show-shiny', false)
 
-const identicon = computed(() => ensambleSvg({ colors: colors.value, sections: sections.value }, { fancy: showFancy.value }))
+const identicon = computed(() => ensambleSvg({ colors: colors.value, sections: sections.value }, { shiny: showShiny.value }))
 </script>
 
 <template>
@@ -130,8 +130,8 @@ const identicon = computed(() => ensambleSvg({ colors: colors.value, sections: s
     <div mx-auto size-156 v-html="identicon" />
     <form nq-mt-32 @submit.prevent="">
       <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
-        <input v-model="showFancy" type="checkbox" nq-switch>
-        Show Fancy
+        <input v-model="showShiny" type="checkbox" nq-switch>
+        Show Shiny
       </label>
       <PillSelector v-model="activeSection" :options mx-auto />
       <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>

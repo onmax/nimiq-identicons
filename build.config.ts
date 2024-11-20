@@ -13,8 +13,18 @@ export default defineBuildConfig({
       builder: 'rollup',
     },
     {
-      input: 'web-components',
+      input: 'src/web-components',
       name: 'web-components',
+      builder: 'rollup',
+    },
+    {
+      input: 'src/shiny',
+      name: 'shiny',
+      builder: 'rollup',
+    },
+    {
+      input: 'src/types',
+      name: 'types',
       builder: 'rollup',
     },
   ],

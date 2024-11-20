@@ -18,9 +18,24 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "browser": "./dist/index.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./shiny": {
+      "types": "./dist/shiny.d.ts",
+      "import": "./dist/shiny.mjs",
+      "require": "./dist/shiny.cjs"
+    },
+    "./web-components": {
+      "types": "./dist/web-components.d.ts",
+      "import": "./dist/web-components.mjs",
+      "require": "./dist/web-components.cjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "browser": "./dist/types.mjs",
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
     }
   },
   "main": "./dist/index.mjs",
@@ -42,6 +57,7 @@
     "dev": "vite build --watch & pnpm --filter=./playground run dev",
     "dev:pkg": "vite build --watch",
     "dev:playground": "pnpm --filter=./playground run dev",
+    "optimize-svg": "esno ./scripts/optimize-svgs.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepublishOnly": "nr build",
@@ -49,8 +65,7 @@
     "start": "esno src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit --ignore",
-    "prepare": "simple-git-hooks",
-    "optimize-svg": "esno ./scripts/optimize-svgs.ts"
+    "prepare": "simple-git-hooks"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.3.2",

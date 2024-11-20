@@ -5,9 +5,14 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: {
+        'index': resolve(__dirname, 'src/index.ts'),
+        'shiny': resolve(__dirname, 'src/shiny.ts'),
+        'web-component': resolve(__dirname, 'src/web-component.ts'),
+        'types': resolve(__dirname, 'src/types.ts'),
+      },
       formats: ['es', 'cjs'],
-      fileName: format => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
+      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'cjs'}`,
     },
     rollupOptions: {
       external: ['node:*', 'jiti'],

@@ -1,21 +1,24 @@
-import { createIdenticon, identiconPlaceholder } from './identicons'
+import { createIdenticon, identiconPlaceholder } from '.'
+import type { ShinyRing } from './types'
 
 const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; }</style>`
 const placeholder = `${hostStyles}${identiconPlaceholder}`
 
 export class IdenticonElement extends HTMLElement {
-  static observedAttributes = ['input', 'fancy']
+  static observedAttributes = ['input', 'shiny', 'ring']
 
   private shadow: ShadowRoot
-  private fancyFlag = false
-  private currentInput = ''
+
+  private currentInput: string | undefined
+  private shinyFlag = false
+  private shinyRing: ShinyRing | undefined
 
   constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.shadow.innerHTML = placeholder
 
-    this.fancyFlag = this.hasAttribute('fancy')
+    this.shinyFlag = this.hasAttribute('shiny')
   }
 
   async attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): Promise<void> {
@@ -23,8 +26,14 @@ export class IdenticonElement extends HTMLElement {
       this.currentInput = newValue || ''
       await this.updateIdenticon(this.currentInput)
     }
-    else if (name === 'fancy') {
-      this.fancyFlag = (!!newValue || newValue === '') && newValue !== 'false'
+    else if (name === 'shiny') {
+      this.shinyFlag = (!!newValue || newValue === '') && newValue !== 'false'
+      if (this.currentInput) {
+        await this.updateIdenticon(this.currentInput)
+      }
+    }
+    else if (name === 'ring') {
+      this.shinyRing = newValue as ShinyRing || undefined
       if (this.currentInput) {
         await this.updateIdenticon(this.currentInput)
       }
@@ -38,7 +47,17 @@ export class IdenticonElement extends HTMLElement {
     }
 
     try {
-      const identicon = await createIdenticon(input, { fancy: this.fancyFlag })
+      let identicon: string
+      if (!this.shinyFlag) {
+        identicon = await createIdenticon(input)
+      }
+      else {
+        if (!this.shinyRing) {
+          throw new Error('Shiny identicons require a ring attribute')
+        }
+        const { createShinyIdenticon } = await import('./shiny')
+        identicon = await createShinyIdenticon(input, { ring: this.shinyRing })
+      }
       this.shadow.innerHTML = `${hostStyles}${identicon}`
     }
     catch (error) {
