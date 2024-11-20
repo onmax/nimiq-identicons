@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { makeHash as legacyMakeHash } from '../legacy/src/js/hash'
-import { makeHash as newMakeHash } from '../src/hash'
+import { makeHash as newMakeHash } from '../src/core'
 
 describe('hashes implementation', () => {
   it('should match hash with legacy', async () => {

@@ -1,5 +1,4 @@
-import { defaultBackgroundShape, defaultCircleShape, defaultShadow } from './constants'
-import { formatIdenticon, getIdenticonsParams } from './core'
+import { defaultBackgroundShape, defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams } from './core'
 import type { CreateIdenticonOptions, IdenticonParams } from './types'
 
 /**

@@ -1,7 +1,8 @@
-import { colorsToRgb } from './colors'
-import { makeHash } from './hash'
-import { sectionsToSvg } from './sections'
-import type { CreateIdenticonOptions, IdenticonParams } from './types'
+import type { Colors, ColorType, CreateIdenticonOptions, IdenticonParams, Section, Sections } from './types'
+
+export const defaultShadow = '<path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>'
+export const defaultBackgroundShape = `<path d="m126.072 8.437 31.956 55.003a15.918 15.918 0 0 1 2.158 7.999c0 2.808-.745 5.566-2.158 7.998l-31.956 55.003c-2.867 4.949-8.183 7.998-13.933 7.998H48.224c-5.75 0-11.066-3.049-13.933-7.998L2.336 79.437a15.96 15.96 0 0 1-2.15-7.998c0-2.808.741-5.566 2.15-7.999l31.96-55.003a16.047 16.047 0 0 1 5.889-5.854A16.173 16.173 0 0 1 48.229.438h63.91c5.75 0 11.066 3.05 13.933 7.999Z" />`
+export const defaultCircleShape = (color: string): string => `<circle cx="80" cy="80" r="40" fill="${color}"/>`
 
 /**
  * Generates the parameters needed to create an identicon
@@ -45,4 +46,76 @@ export async function formatIdenticon(svg: string, { format = 'svg' }: CreateIde
     default:
       return svg
   }
+}
+
+export const colors = ['#FC8702', '#D94432', '#E9B213', '#1A5493', '#0582CA', '#5961A8', '#21BCA5', '#FA7268', '#88B04B', '#795548'] as const
+export const backgroundColors = ['#FC8702', '#D94432', '#E9B213', '#1F2348', '#0582CA', '#5F4B8B', '#21BCA5', '#FA7268', '#88B04B', '#795548'] as const
+
+export function colorsToRgb({ main, background, accent }: Record<ColorType, number>): Colors {
+  const adjustIndex = (index: number): number => ((index + 1) % 10) as number
+
+  if (main === background)
+    main = adjustIndex(main)
+  while (accent === main || accent === background) accent = adjustIndex(accent)
+
+  return {
+    main: colors[main],
+    background: backgroundColors[background],
+    accent: colors[accent],
+  }
+}
+
+export function makeHash(input: string): string {
+  const fullHash = [...input]
+    .map(c => c.charCodeAt(0) + 3)
+    .reduce((a, e) => a * (1 - a) * chaosHash(e), 0.5)
+    .toString(10)
+    .split('')
+    .reduce((a, e) => e + a, '')
+
+  const hash = fullHash
+    .replace('.', fullHash[5]) // Replace the dot as it cannot be parsed to int
+    .slice(4, 21) // Changed from (4, 17) to (4, 21) to match legacy behavior
+
+  // The index 5 of `fullHash` is currently unused (index 1 of `hash`,
+  // after cutting off the first 4 elements). Identicons.svg() is not using it.
+
+  // A small percentage of returned values are actually too short,
+  // leading to an invalid bottom index and feature color. Adding
+  // padding creates a bottom feature and accent color where no
+  // existed previously, thus it's not a disrupting change.
+  return hash.padEnd(13, fullHash[5])
+}
+
+function chaosHash(number: number): number {
+  const k = 3.569956786876
+  let a_n = 1 / number
+  for (let i = 0; i < 100; i++)
+    a_n = (1 - a_n) * a_n * k
+  return a_n
+}
+
+export const identiconFeatures: Record<string, string> = {
+  ...import.meta.glob('./svgs/optimized/bottom/*.svg', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('./svgs/optimized/top/*.svg', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('./svgs/optimized/face/*.svg', { eager: true, query: '?raw', import: 'default' }),
+  ...import.meta.glob('./svgs/optimized/sides/*.svg', { eager: true, query: '?raw', import: 'default' }),
+}
+
+export function sectionToSvg(section: Section, index: number): string {
+  const numIndex = (Number(index) % 21) + 1
+  const assetIndex = numIndex < 10 ? `0${numIndex}` : `${numIndex}`
+  const selector = `${section}_${assetIndex}`
+  const svgFile = `/src/svgs/${section}/${selector}.svg`
+  const svg = identiconFeatures[svgFile]
+  if (!svg)
+    throw new Error(`SVG file not found for ${section} with index ${index}/${index}. Path ${svgFile}`)
+  return svg
+}
+
+export async function sectionsToSvg(sectionsIndexes: Record<Section, number>): Promise<Sections> {
+  const [bottom, face, sides, top] = await Promise.all(
+    (['bottom', 'face', 'sides', 'top'] as Section[]).map(s => sectionToSvg(s, sectionsIndexes[s])),
+  )
+  return { bottom, top, sides, face }
 }

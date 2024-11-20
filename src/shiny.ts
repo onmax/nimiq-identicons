@@ -1,5 +1,4 @@
-import { defaultBackgroundShape, defaultCircleShape, defaultShadow } from './constants'
-import { formatIdenticon, getIdenticonsParams } from './core'
+import { defaultBackgroundShape, defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams } from './core'
 import type { CreateShinyIdenticonOptions, IdenticonParams } from './types'
 
 // TODO colors
@@ -9,8 +8,7 @@ export function ensambleShinySvg({ colors: { accent, background, main }, section
   circleShape ||= defaultCircleShape(main)
 
   const innerBackgroundShape = `<path d="M120.656 10.991C118.869 7.906 115.549 6 111.954 6H48.046c-1.764 0-3.5.463-5.028 1.34a10.029 10.029 0 0 0-3.68 3.659L7.382 65.992l-.002.004a9.99 9.99 0 0 0 0 10.006l.002.003 31.955 55.002A10.053 10.053 0 0 0 48.039 136h63.915c3.595 0 6.915-1.907 8.702-4.993l.004-.006 31.955-55.003a9.943 9.943 0 0 0 .001-9.996l-31.96-55.012Z" />`
-  const template = `
-<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+  const template = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="0 0 160 160" width="160" height="160"
     opacity="0.93">
     <defs>

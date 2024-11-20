@@ -8,8 +8,8 @@ export default defineBuildConfig({
       builder: 'rollup',
     },
     {
-      input: 'src/index',
-      name: 'index.min',
+      input: 'src/core',
+      name: 'core',
       builder: 'rollup',
     },
     {

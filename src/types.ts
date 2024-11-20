@@ -14,19 +14,19 @@ export interface CreateIdenticonOptions {
   format?: IdenticonFormat
 }
 
-export enum ShinyRing {
+export enum IdenticonMaterial {
   Bronze = 'bronze',
   Silver = 'silver',
   Gold = 'gold',
   Platinum = 'platinum',
-  Diamond = 'diamond',
-  Master = 'master',
-  Grandmaster = 'grandmaster',
+  None = 'none',
 }
 
 export type CreateShinyIdenticonOptions = CreateIdenticonOptions & {
   /**
    * The border color of the shiny identicon
+   *
+   * @default 'none'
    */
-  ring: ShinyRing
+  material: IdenticonMaterial
 }

@@ -10,6 +10,7 @@ export default defineConfig({
         'shiny': resolve(__dirname, 'src/shiny.ts'),
         'web-component': resolve(__dirname, 'src/web-component.ts'),
         'types': resolve(__dirname, 'src/types.ts'),
+        'core': resolve(__dirname, 'src/core.ts'),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'cjs'}`,

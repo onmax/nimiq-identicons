@@ -38,7 +38,6 @@ function getStrSize(str: string): number {
 const identiconSize = computed(() => getStrSize(identicon.value))
 const identiconLegacySize = computed(() => getStrSize(identiconLegacy.value))
 
-const showLegacy = useLocalStorage('show-legacy', false)
 const showShiny = useLocalStorage('show-shiny', false)
 </script>
 
@@ -56,22 +55,17 @@ const showShiny = useLocalStorage('show-shiny', false)
     </form>
 
     <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
-      <input v-model="showLegacy" type="checkbox" nq-switch>
-      Show Legacy implementation
-    </label>
-
-    <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
       <input v-model="showShiny" type="checkbox" nq-switch>
       Show Shiny
     </label>
 
     <div flex="~ gap-8 col md:row justify-around" w-full nq-mt-32>
       <div flex="~ items-center col">
-        <h2 v-show="showLegacy" text="xs blue" ring="1.5 blue/60" w-max rounded-full px-16 py-4 font-semibold nq-label>
+        <h2 text="xs blue" ring="1.5 blue/60" w-max rounded-full px-16 py-4 font-semibold nq-label>
           New
         </h2>
         <img :src="identicon" alt="" nq-mt-16>
-        <div v-show="showLegacy" flex="~ items-center" text-xs nq-label>
+        <div flex="~ items-center" text-xs nq-label>
           <p title="size of the svg as data URI">
             {{ identiconSize }}kb
           </p>
@@ -82,8 +76,8 @@ const showShiny = useLocalStorage('show-shiny', false)
         </div>
       </div>
 
-      <div v-if="showLegacy" flex="~ col items-center">
-        <h2 v-show="showLegacy" text="xs neutral-700" ring="1.5 neutral-500" w-max rounded-full px-16 py-4 font-semibold nq-label>
+      <div flex="~ col items-center">
+        <h2 text="xs neutral-700" ring="1.5 neutral-500" w-max rounded-full px-16 py-4 font-semibold nq-label>
           Legacy
         </h2>
         <img :src="identiconLegacy" alt="" nq-mt-16>

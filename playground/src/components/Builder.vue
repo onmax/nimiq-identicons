@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
-import { ensambleSvg, getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm'
+import { ensambleSvg } from 'identicons-esm'
+import { getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm/core'
+import { ensambleShinySvg } from 'identicons-esm/shiny'
 import { computed, onMounted, ref } from 'vue'
-import type { Colors, Section, Sections } from 'identicons-esm'
+import type { Colors, Section, Sections } from 'identicons-esm/types'
 import PillSelector from './PillSelector.vue'
 
 const props = defineProps<{ input: string }>()
@@ -122,7 +124,11 @@ async function generateString() {
 
 const showShiny = useLocalStorage('show-shiny', false)
 
-const identicon = computed(() => ensambleSvg({ colors: colors.value, sections: sections.value }, { shiny: showShiny.value }))
+const identicon = computed(() => {
+  return showShiny.value
+    ? ensambleShinySvg({ colors: colors.value, sections: sections.value })
+    : ensambleSvg({ colors: colors.value, sections: sections.value })
+})
 </script>
 
 <template>

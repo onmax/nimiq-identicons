@@ -1,22 +1,22 @@
-import { readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { cwd } from 'node:process'
 import { join } from 'pathe'
 import { optimize } from 'svgo'
 import tinyglob from 'tiny-glob'
 import type { PluginConfig } from 'svgo'
 
-async function optimizeSvgFile(filePath: string) {
+async function optimizeSvgFile(inputPath: string, outputPath: string) {
   try {
-    const data = await readFile(filePath, 'utf8')
+    const data = await readFile(inputPath, 'utf8')
     const svg = optimizeSvg(data)
     if (!svg)
       return
-    const withoutSvgTag = svg.replace(/<svg[^>]*>/, '')
-    await writeFile(filePath, withoutSvgTag, 'utf8')
-    console.log(`Optimized: ${filePath}`)
+    const withoutSvgTag = svg.replace(/<svg[^>]*>/, '').replace(/<\/svg>/, '')
+    await writeFile(outputPath, withoutSvgTag, 'utf8')
+    console.log(`Optimized: ${outputPath}`)
   }
   catch (error) {
-    console.error(`Error processing ${filePath}:`, error)
+    console.error(`Error processing ${inputPath}:`, error)
   }
 }
 
@@ -50,8 +50,20 @@ function optimizeSvg(svg: string): string {
 }
 
 async function processFiles() {
-  const files = await tinyglob('src/svgs/*/*.svg')
-  return Promise.all(files.map(file => optimizeSvgFile(join(cwd(), file))))
+  const base = join(cwd(), './src/svgs')
+
+  await mkdir(join(base, 'optimized/top'), { recursive: true })
+  await mkdir(join(base, 'optimized/bottom'), { recursive: true })
+  await mkdir(join(base, 'optimized/sides'), { recursive: true })
+  await mkdir(join(base, 'optimized/face'), { recursive: true })
+
+  const originalDir = join(base, 'original')
+  const inputPaths = await tinyglob(`${originalDir}/**/*.svg`)
+
+  // replace original with optimized
+  const outputPaths = inputPaths.map(path => path.replace('original', 'optimized'))
+  const zippedPaths = inputPaths.map((path, index) => [join(cwd(), path), join(cwd(), outputPaths[index])])
+  return Promise.all(zippedPaths.map(([inputPath, outputPath]) => optimizeSvgFile(inputPath, outputPath)))
 }
 
 processFiles().then(() => console.log('SVG optimization complete'))

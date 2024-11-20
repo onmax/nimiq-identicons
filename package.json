@@ -18,16 +18,19 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "browser": "./dist/index.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
     "./shiny": {
       "types": "./dist/shiny.d.ts",
+      "browser": "./dist/shiny.mjs",
       "import": "./dist/shiny.mjs",
       "require": "./dist/shiny.cjs"
     },
     "./web-components": {
       "types": "./dist/web-components.d.ts",
+      "browser": "./dist/web-components.mjs",
       "import": "./dist/web-components.mjs",
       "require": "./dist/web-components.cjs"
     },
@@ -36,6 +39,12 @@
       "browser": "./dist/types.mjs",
       "import": "./dist/types.mjs",
       "require": "./dist/types.cjs"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "browser": "./dist/core.mjs",
+      "import": "./dist/core.mjs",
+      "require": "./dist/core.cjs"
     }
   },
   "main": "./dist/index.mjs",
@@ -54,7 +63,7 @@
   ],
   "scripts": {
     "build": "vite build",
-    "dev": "vite build --watch & pnpm --filter=./playground run dev",
+    "dev": "pnpm optimize-svg && vite build --watch & pnpm --filter=./playground run dev",
     "dev:pkg": "vite build --watch",
     "dev:playground": "pnpm --filter=./playground run dev",
     "optimize-svg": "esno ./scripts/optimize-svgs.ts",
