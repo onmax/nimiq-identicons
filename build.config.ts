@@ -13,8 +13,13 @@ export default defineBuildConfig({
       builder: 'rollup',
     },
     {
-      input: 'src/web-components',
-      name: 'web-components',
+      input: 'src/web-component',
+      name: 'web-component',
+      builder: 'rollup',
+    },
+    {
+      input: 'src/shiny-web-component',
+      name: 'shiny-web-component',
       builder: 'rollup',
     },
     {

@@ -12,7 +12,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: tag => tag === 'nimiq-identicon',
+          isCustomElement: tag => tag === 'nimiq-identicon' || tag === 'nimiq-shiny-identicon',
         },
       },
     }),

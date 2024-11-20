@@ -1,17 +1,17 @@
 import { identiconPlaceholder } from '.'
 import { createShinyIdenticon } from './shiny'
-import { IdenticonMaterial } from './types'
+import type { IdenticonMaterial } from './types'
 
 const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; }</style>`
 const placeholder = `${hostStyles}${identiconPlaceholder}`
 
-export class IdenticonElement extends HTMLElement {
+export class ShinyIdenticonElement extends HTMLElement {
   static observedAttributes = ['input', 'material']
 
   private shadow: ShadowRoot
 
   private currentInput: string | undefined
-  private currentMaterial = IdenticonMaterial.None
+  private currentMaterial: IdenticonMaterial | undefined
 
   constructor() {
     super()
@@ -25,6 +25,8 @@ export class IdenticonElement extends HTMLElement {
       await this.updateIdenticon(this.currentInput)
     }
     else if (name === 'material') {
+      if (!['bronze', 'silver', 'gold', 'platinum'].includes(newValue || ''))
+        throw new Error('Invalid material attribute. Must be one of: bronze, silver, gold, platinum')
       this.currentMaterial = newValue as IdenticonMaterial || undefined
     }
   }
@@ -36,7 +38,7 @@ export class IdenticonElement extends HTMLElement {
     }
 
     try {
-      const identicon = await createShinyIdenticon(input, { material: this.currentMaterial })
+      const identicon = await createShinyIdenticon(input, { material: this.currentMaterial! })
       this.shadow.innerHTML = `${hostStyles}${identicon}`
     }
     catch (error) {
@@ -46,4 +48,4 @@ export class IdenticonElement extends HTMLElement {
   }
 }
 
-customElements.define('nimiq-identicon', IdenticonElement)
+customElements.define('nimiq-shiny-identicon', ShinyIdenticonElement)

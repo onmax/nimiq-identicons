@@ -3,7 +3,7 @@ import { useLocalStorage } from '@vueuse/core'
 
 const input = useLocalStorage('web-component-input', 'nimiq')
 
-const shiny = useLocalStorage('web-component-shiny', false)
+const shiny = useLocalStorage('show-shiny', false)
 </script>
 
 <template>
@@ -23,7 +23,8 @@ const shiny = useLocalStorage('web-component-shiny', false)
       Show Shiny
     </label>
     <div flex="~ col items-center gap-16">
-      <nimiq-identicon :shiny :input />
+      <nimiq-shiny-identicon v-if="shiny" :shiny :input />
+      <nimiq-identicon v-else :input />
       <div op-50 text-sm>
         This is rendered using the Web Component
       </div>

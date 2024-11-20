@@ -9,6 +9,7 @@ export default defineConfig({
         'index': resolve(__dirname, 'src/index.ts'),
         'shiny': resolve(__dirname, 'src/shiny.ts'),
         'web-component': resolve(__dirname, 'src/web-component.ts'),
+        'shiny-web-component': resolve(__dirname, 'src/shiny-web-component.ts'),
         'types': resolve(__dirname, 'src/types.ts'),
         'core': resolve(__dirname, 'src/core.ts'),
       },
