@@ -4,10 +4,11 @@ import { materialGradients } from 'identicons-esm/shiny'
 
 const activeMaterial = defineModel<IdenticonMaterial>({ default: 'bronze' })
 
-const bronzeGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><defs>${materialGradients.bronze.replace('160', '40').replace('160', '40')}</defs><rect width="40" height="40" rx="20" fill="url(#m)" /></svg>`
-const goldGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><defs>${materialGradients.gold}</defs><rect width="40" height="40" rx="20" fill="url(#m)" /></svg>`
-const platinumGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><defs>${materialGradients.platinum}</defs><rect width="40" height="40" rx="20" fill="url(#m)" /></svg>`
-const silverGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><defs>${materialGradients.silver}</defs><rect width="40" height="40" rx="20" fill="url(#m)" /></svg>`
+const bronzeGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">${materialGradients.bronze.replace('m', 'b')}<rect width="40" height="40" rx="20" fill="url(#b)" /></svg>`
+const goldGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">${materialGradients.gold.replace('m', 'g')}<rect width="40" height="40" rx="20" fill="url(#g)" /></svg>`
+const platinumGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">${materialGradients.platinum.replace('m', 'p')}<rect width="40" height="40" rx="20" fill="url(#p)" /></svg>`
+const silverGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">${materialGradients.silver.replace('m', 's')}<rect width="40" height="40" rx="20" fill="url(#m
+s)" /></svg>`
 </script>
 
 <template>
@@ -20,7 +21,7 @@ const silverGradient = `<svg xmlns="http://www.w3.org/2000/svg" width="40" heigh
     </div>
     <div w-full flex="~ wrap gap-12">
       <div mx-auto cursor-pointer @click="activeMaterial = 'gold'">
-        <div v-html="goldGradient" />
+        <div key="gold" v-html="goldGradient" />
       </div>
       <span text="center 10" w-full nq-label>Gold</span>
     </div>
