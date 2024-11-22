@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { makeHash as newMakeHash } from '../src/core'
 // @ts-expect-error no types
-import { makeHash as V1MakeHash } from '../V1/src/js/hash'
+import { makeHash as V1MakeHash } from '../v1/src/js/hash'
 
 describe('hashes implementation', () => {
   it('should match hash with V1', async () => {
