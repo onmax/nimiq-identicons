@@ -1,28 +1,33 @@
 <script setup lang="ts">
+import type { IdenticonMaterial } from 'identicons-esm/types'
 // @ts-expect-error no types available
 import IdenticonsV1 from '@nimiq/identicons/dist/identicons.min.js'
-import { useLocalStorage } from '@vueuse/core'
+import { useClipboard, useLocalStorage } from '@vueuse/core'
 import { createIdenticon } from 'identicons-esm'
 import { createShinyIdenticon } from 'identicons-esm/shiny'
 import { computed, ref, watch } from 'vue'
+import MaterialSelector from './MaterialSelector.vue'
 
 const identicon = ref<string>('')
 const identiconV1 = ref<string>('')
 const identiconDuration = ref(0)
 const identiconV1Duration = ref(0)
+const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'bronze')
 
 const input = useLocalStorage('input-default', 'nimiq')
 const showShiny = useLocalStorage('show-shiny', false)
-watch([input, showShiny], async () => {
+watch([input, showShiny, activeMaterial], async () => {
   if (!input.value)
     return
   const start = performance.now()
   identicon.value = showShiny.value
-    ? await createShinyIdenticon(input.value, { format: 'image/svg+xml', material: 'bronze' })
+    ? await createShinyIdenticon(input.value, { format: 'image/svg+xml', material: activeMaterial.value })
     : await createIdenticon(input.value, { format: 'image/svg+xml' })
   const end = performance.now()
   identiconDuration.value = Number((end - start).toFixed(2))
 }, { immediate: true })
+
+const { copy, copied } = useClipboard({ source: identicon })
 
 IdenticonsV1.svgPath = './node_modules/@nimiq/identicons/dist/identicons.min.svg'
 watch(input, async () => {
@@ -56,10 +61,16 @@ const identiconV1Size = computed(() => getStrSize(identiconV1.value))
       >
     </form>
 
-    <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
-      <input v-model="showShiny" type="checkbox" nq-switch>
-      Show Shiny
-    </label>
+    <div flex="~ gap-16 items-center justify-end">
+      <label flex="~ gap-8" text-right text-sm nq-mt-16>
+        <input v-model="showShiny" type="checkbox" nq-switch>
+        Show Shiny
+      </label>
+
+      <button type="button" mt-8 nq-pill nq-pill-secondary :class="{ 'bg-green': copied }" @click="() => copy()">
+        {{ copied ? 'Copied!' : 'Copy SVG' }}
+      </button>
+    </div>
 
     <div flex="~ gap-8 col md:row justify-around" w-full nq-mt-32>
       <div flex="~ items-center col">
@@ -76,6 +87,8 @@ const identiconV1Size = computed(() => getStrSize(identiconV1.value))
             {{ identiconDuration }}ms
           </p>
         </div>
+
+        <MaterialSelector v-if="showShiny" v-model="activeMaterial" nq-mt-32 />
       </div>
 
       <div flex="~ col items-center">

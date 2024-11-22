@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useLocalStorage } from '@vueuse/core'
+import type { Colors, IdenticonMaterial, Section, Sections } from 'identicons-esm/types'
+import { useClipboard, useLocalStorage } from '@vueuse/core'
 import { ensambleSvg } from 'identicons-esm'
 import { getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm/core'
-import { ensambleShinySvg } from 'identicons-esm/shiny'
-import { computed, onMounted, ref } from 'vue'
-import type { Colors, Section, Sections } from 'identicons-esm/types'
+import { ensambleShinySvg, materialGradients } from 'identicons-esm/shiny'
+import { computed, onMounted, ref, watch } from 'vue'
+import MaterialSelector from './MaterialSelector.vue'
 import PillSelector from './PillSelector.vue'
 
 const props = defineProps<{ input: string }>()
@@ -18,8 +19,12 @@ const top = ref<Svg[]>(entries.filter(([path]) => path.includes('top')).map(([pa
 const face = ref<Svg[]>(entries.filter(([path]) => path.includes('face')).map(([path, svg]) => ({ path, svg })))
 const sides = ref<Svg[]>(entries.filter(([path]) => path.includes('sides')).map(([path, svg]) => ({ path, svg })))
 
-const options = ['bottom', 'top', 'face', 'sides', 'colors']
-const activeSection = useLocalStorage<Section | 'colors'>('active-variant', 'bottom')
+const showShiny = useLocalStorage('show-shiny', false)
+const options = computed(() => !showShiny.value
+  ? ['bottom', 'top', 'face', 'sides', 'colors']
+  : ['bottom', 'top', 'face', 'sides', 'colors', 'material'],
+)
+const activeSection = useLocalStorage<Section | 'colors' | 'material'>('active-variant', 'bottom')
 const activeFeatures = computed(() => {
   if (activeSection.value === 'bottom')
     return bottom.value
@@ -38,6 +43,7 @@ const activeSides = useLocalStorage('activeSides', '')
 const activeMain = useLocalStorage('activeMain', '')
 const activeAccent = useLocalStorage('activeAccent', '')
 const activeBackground = useLocalStorage('activeBackground', '')
+const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'bronze')
 const colors = computed(() => ({
   main: activeMain.value,
   accent: activeAccent.value,
@@ -122,12 +128,16 @@ async function generateString() {
   }
 }
 
-const showShiny = useLocalStorage('show-shiny', false)
-
 const identicon = computed(() => {
   return showShiny.value
-    ? ensambleShinySvg({ colors: colors.value, sections: sections.value })
+    ? ensambleShinySvg({ colors: colors.value, sections: sections.value, material: activeMaterial.value })
     : ensambleSvg({ colors: colors.value, sections: sections.value })
+})
+
+const { copy, copied } = useClipboard({ source: identicon })
+watch(showShiny, () => {
+  if (!showShiny.value && activeSection.value === 'material')
+    activeSection.value = 'bottom'
 })
 </script>
 
@@ -135,11 +145,17 @@ const identicon = computed(() => {
   <div>
     <div mx-auto size-156 v-html="identicon" />
     <form nq-mt-32 @submit.prevent="">
-      <label flex="~ gap-8" self-end justify-self-end text-right text-sm nq-mt-16>
-        <input v-model="showShiny" type="checkbox" nq-switch>
-        Show Shiny
-      </label>
-      <PillSelector v-model="activeSection" :options mx-auto />
+      <div flex="~ gap-16 items-center justify-end">
+        <label flex="~ gap-8" text-right text-sm nq-mt-16>
+          <input v-model="showShiny" type="checkbox" nq-switch>
+          Show Shiny
+        </label>
+
+        <button type="button" mt-8 nq-pill nq-pill-secondary :class="{ 'bg-green': copied }" @click="() => copy()">
+          {{ copied ? 'Copied!' : 'Copy SVG' }}
+        </button>
+      </div>
+      <PillSelector v-model="activeSection" :options mx-auto nq-mt-16 />
       <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>
         <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>
           <button group bg-transparent @click="select(svg)">
@@ -152,24 +168,25 @@ const identicon = computed(() => {
         <label flex="~ items-center gap-8">
           <span mr-auto text-10 nq-label>Main color</span>
           <div v-for="color in identiconColors" :key="color">
-            <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeMain = color" />
+            <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeMain = color" />
           </div>
         </label>
 
         <label flex="~ items-center gap-8" nq-mt-32>
           <span mr-auto text-10 nq-label>Background color</span>
           <div v-for="color in identiconColors" :key="color">
-            <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
+            <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
           </div>
         </label>
 
         <label flex="~ items-center gap-8" nq-mt-32>
           <span mr-auto text-10 nq-label>Accent color</span>
           <div v-for="color in identiconColors" :key="color">
-            <div :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
+            <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
           </div>
         </label>
       </div>
+      <MaterialSelector v-if="activeSection === 'material'" v-model="activeMaterial" nq-mt-16 />
     </form>
     <button nq-pill-sm mx-auto mb-96 mt-48 nq-pill-blue @click="generateString">
       Find a string that generates this identicon

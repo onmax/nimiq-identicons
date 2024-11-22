@@ -15,6 +15,7 @@ export interface CreateIdenticonOptions {
 }
 
 export type IdenticonMaterial = 'bronze' | 'silver' | 'gold' | 'platinum'
+export type ShinyIdenticonParams = IdenticonParams & { material: IdenticonMaterial }
 
 export type CreateShinyIdenticonOptions = CreateIdenticonOptions & {
   /**
@@ -22,5 +23,5 @@ export type CreateShinyIdenticonOptions = CreateIdenticonOptions & {
    *
    * @default 'none'
    */
-  material: 'bronze' | 'silver' | 'gold' | 'platinum'
+  material: IdenticonMaterial
 }
