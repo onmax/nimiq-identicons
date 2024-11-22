@@ -1,15 +1,15 @@
 <script setup lang="ts">
 // @ts-expect-error no types available
-import IdenticonsLegacy from '@nimiq/identicons/dist/identicons.min.js'
+import IdenticonsV1 from '@nimiq/identicons/dist/identicons.min.js'
 import { useLocalStorage } from '@vueuse/core'
 import { createIdenticon } from 'identicons-esm'
 import { createShinyIdenticon } from 'identicons-esm/shiny'
 import { computed, ref, watch } from 'vue'
 
 const identicon = ref<string>('')
-const identiconLegacy = ref<string>('')
+const identiconV1 = ref<string>('')
 const identiconDuration = ref(0)
-const identiconLegacyDuration = ref(0)
+const identiconV1Duration = ref(0)
 
 const input = useLocalStorage('input-default', 'nimiq')
 const showShiny = useLocalStorage('show-shiny', false)
@@ -24,14 +24,14 @@ watch([input, showShiny], async () => {
   identiconDuration.value = Number((end - start).toFixed(2))
 }, { immediate: true })
 
-IdenticonsLegacy.svgPath = './node_modules/@nimiq/identicons/dist/identicons.min.svg'
+IdenticonsV1.svgPath = './node_modules/@nimiq/identicons/dist/identicons.min.svg'
 watch(input, async () => {
   if (!input.value)
     return
   const start = performance.now()
-  identiconLegacy.value = await IdenticonsLegacy.toDataUrl(input.value)
+  identiconV1.value = await IdenticonsV1.toDataUrl(input.value)
   const end = performance.now()
-  identiconLegacyDuration.value = Number((end - start).toFixed(2))
+  identiconV1Duration.value = Number((end - start).toFixed(2))
 }, { immediate: true })
 
 function getStrSize(str: string): number {
@@ -40,7 +40,7 @@ function getStrSize(str: string): number {
 }
 
 const identiconSize = computed(() => getStrSize(identicon.value))
-const identiconLegacySize = computed(() => getStrSize(identiconLegacy.value))
+const identiconV1Size = computed(() => getStrSize(identiconV1.value))
 </script>
 
 <template>
@@ -80,17 +80,17 @@ const identiconLegacySize = computed(() => getStrSize(identiconLegacy.value))
 
       <div flex="~ col items-center">
         <h2 text="xs neutral-700" ring="1.5 neutral-500" w-max rounded-full px-16 py-4 font-semibold nq-label>
-          Legacy
+          V1
         </h2>
-        <img :src="identiconLegacy" alt="" nq-mt-16>
+        <img :src="identiconV1" alt="" nq-mt-16>
         <div id="container" />
         <div flex="~ items-center" text-xs nq-label>
           <p title="size of the svg as data URI">
-            {{ identiconLegacySize }}kb
+            {{ identiconV1Size }}kb
           </p>
           <div mx-16 w-px self-stretch bg-neutral-800 />
           <p lowercase title="time to compute">
-            {{ identiconLegacyDuration }}ms
+            {{ identiconV1Duration }}ms
           </p>
         </div>
         <p text-xs>

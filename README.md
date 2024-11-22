@@ -43,7 +43,7 @@ const { colors, sections } = await getIdenticonsParams(input)
 // sections.face -> Path to the SVG
 ```
 
-## Why not just use the legacy version?
+## Why not just use the V1 version?
 
 We were having issues running the lib in workerd. That's it. But then, when I started looking into it, I discovered that we are there was space for improvements.
 
@@ -55,11 +55,11 @@ With the new approach, we run `svgo` with some defined plugins in dev and write 
 
 ### Performance Comparison
 
-| Metric                 | Legacy Implementation | Current Implementation |
-| ---------------------- | --------------------- | ---------------------- |
-| First Time Load        | ~20ms                 | ~10ms                  |
-| Already Loaded         | ~6ms                  | ~1ms                   |
-| Average Size Reduction | -                     | 25% smaller            |
+| Metric                 | V1 Implementation | Current Implementation |
+| ---------------------- | ----------------- | ---------------------- |
+| First Time Load        | ~20ms             | ~10ms                  |
+| Already Loaded         | ~6ms              | ~1ms                   |
+| Average Size Reduction | -                 | 25% smaller            |
 
 ## Migrate
 
@@ -72,7 +72,7 @@ Currently part of the implementation has been ported
 ```js
 // @ts-ignore Types no implemented
 import Identicons from '@nimiq/identicons/dist/identicons.min.js'
-IdenticonsLegacy.svgPath = '@nimiq/identicons/dist/identicons.min.svg'
+IdenticonsV1.svgPath = '@nimiq/identicons/dist/identicons.min.svg'
 
 const input = 'Your input here'
 const svg = await Identicons.svg(input)
@@ -96,7 +96,7 @@ const svg = await createIdenticon(input)
 ```js
 // @ts-ignore Types no implemented
 import Identicons from '@nimiq/identicons/dist/identicons.min.js'
-IdenticonsLegacy.svgPath = '@nimiq/identicons/dist/identicons.min.svg'
+IdenticonsV1.svgPath = '@nimiq/identicons/dist/identicons.min.svg'
 
 const input = 'Your input here'
 const svg = await Identicons.toDataUri(input)

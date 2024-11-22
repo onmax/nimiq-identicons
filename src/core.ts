@@ -74,7 +74,7 @@ export function makeHash(input: string): string {
 
   const hash = fullHash
     .replace('.', fullHash[5]) // Replace the dot as it cannot be parsed to int
-    .slice(4, 21) // Changed from (4, 17) to (4, 21) to match legacy behavior
+    .slice(4, 21) // Changed from (4, 17) to (4, 21) to match V1 behavior
 
   // The index 5 of `fullHash` is currently unused (index 1 of `hash`,
   // after cutting off the first 4 elements). Identicons.svg() is not using it.
