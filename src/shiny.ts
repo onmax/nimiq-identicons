@@ -26,36 +26,8 @@ export function ensambleShinySvg({ colors: { accent, background, main }, section
 
   // TODO Minify svg
   const innerBackgroundShape = `<path d="M120.656 10.991C118.869 7.906 115.549 6 111.954 6H48.046c-1.764 0-3.5.463-5.028 1.34a10.029 10.029 0 0 0-3.68 3.659L7.382 65.992l-.002.004a9.99 9.99 0 0 0 0 10.006l.002.003 31.955 55.002A10.053 10.053 0 0 0 48.039 136h63.915c3.595 0 6.915-1.907 8.702-4.993l.004-.006 31.955-55.003a9.943 9.943 0 0 0 .001-9.996l-31.96-55.012Z" />`
-  const template = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
-    <defs>
-        <filter id="nnnoise-filter" x="-20%" y="-20%" width="140%" height="140%"
-            filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse"
-            color-interpolation-filters="linearRGB">
-            <feTurbulence type="turbulence" baseFrequency="1" numOctaves="4" seed="15"
-                stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="turbulence"></feTurbulence>
-            <feSpecularLighting surfaceScale="3" specularConstant="3" specularExponent="20"
-                lighting-color="#0eff00" x="0%" y="0%" width="100%" height="100%" in="turbulence"
-                result="specularLighting">
-                <feDistantLight azimuth="3" elevation="19"></feDistantLight>
-            </feSpecularLighting>
-            <feColorMatrix type="saturate" values="0" x="0%" y="0%" width="100%" height="100%"
-                in="specularLighting" result="colormatrix"></feColorMatrix>
-        </filter>
-        ${materialGradients[material]}
-        <linearGradient id="e" x1="162.732" x2="31.769" y1="145.635" y2="28.728" class="b" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#79AEE7" />
-        <stop offset=".33" stop-color="#4960A7" />
-        <stop offset="1" stop-color="#1B2030" stop-opacity=".25" />
-      </linearGradient>
-    </defs>
-<clipPath id="c">${backgroundShape}</clipPath>
-<clipPath id="d">${innerBackgroundShape}</clipPath>
-<rect width="160" height="160" fill="url(#m)" clip-path="url(#c)" />
-<rect width="160" height="160" fill="#7957a8" clip-path="url(#c)" filter="url(#nnnoise-filter)" />
-<rect width="160" height="160" fill="${background}" clip-path="url(#d)" />
-<rect width="160" height="160" fill="url(#e)" clip-path="url(#d)" style="mix-blend-mode:color-dodge" />
-        <g fill="${accent}" transform="translate(80,60) scale(0.75) translate(-80,-60)" color="${main}">${circleShape}${innerShadow}${top}${sides}${face}${bottom}</g>
-</svg>`
+  const noise = `<filter id="o" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB"><feTurbulence type="turbulence" baseFrequency="1" numOctaves="4" seed="15" stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="turbulence"></feTurbulence><feSpecularLighting surfaceScale="3" specularConstant="3" specularExponent="20" lighting-color="#0eff00" x="0%" y="0%" width="100%" height="100%" in="turbulence" result="specularLighting"><feDistantLight azimuth="3" elevation="19"></feDistantLight></feSpecularLighting><feColorMatrix type="saturate" values="0" x="0%" y="0%" width="100%" height="100%" in="specularLighting" result="colormatrix"></feColorMatrix></filter>`
+  const template = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160"><defs>${noise}${materialGradients[material]}<linearGradient id="e" x1="162.732" x2="31.769" y1="145.635" y2="28.728" class="b" gradientUnits="userSpaceOnUse"><stop stop-color="#79AEE7" /><stop offset=".33" stop-color="#4960A7" /><stop offset="1" stop-color="#1B2030" stop-opacity=".25" /></linearGradient></defs><clipPath id="c">${backgroundShape}</clipPath><clipPath id="d">${innerBackgroundShape}</clipPath><rect width="160" height="160" fill="url(#m)" clip-path="url(#c)" /><rect width="160" height="160" fill="#7957a8" clip-path="url(#c)" filter="url(#o)" /><rect width="160" height="160" fill="${background}" clip-path="url(#d)" /><rect width="160" height="160" fill="url(#e)" clip-path="url(#d)" style="mix-blend-mode:color-dodge" /><g fill="${accent}" transform="translate(80,60) scale(0.968) translate(-80,-60)" color="${main}">${circleShape}${innerShadow}${top}${sides}${face}${bottom}</g></svg>`
   return template
 }
 

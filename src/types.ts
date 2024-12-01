@@ -8,7 +8,7 @@ export type IdenticonFormat = 'svg' | 'image/svg+xml' // | 'image/png'
 
 export interface CreateIdenticonOptions {
   /**
-   * The format of the encoded image
+   * The format of the encoded image. @see {@link IdenticonFormat}
    * @default 'svg'
    */
   format?: IdenticonFormat
