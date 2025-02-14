@@ -3,7 +3,7 @@ import type { Colors, IdenticonMaterial, Section, Sections } from 'identicons-es
 import { useClipboard, useLocalStorage } from '@vueuse/core'
 import { ensambleSvg } from 'identicons-esm'
 import { getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm/core'
-import { ensambleShinySvg, materialGradients } from 'identicons-esm/shiny'
+import { ensambleShinySvg, gradientNoise } from 'identicons-esm/shiny'
 import { computed, onMounted, ref, watch } from 'vue'
 import MaterialSelector from './MaterialSelector.vue'
 import PillSelector from './PillSelector.vue'
@@ -103,7 +103,7 @@ function select(svg: string) {
 
 async function generateString() {
   // eslint-disable-next-line no-alert
-  const shouldContinue = confirm('This will trigger a force brute algorithm to find the string. It may take a while, it will block the main thread of this tab, and the only way of stopping is closing the tab. I am not sure really what the consecuences are, but if you continue you have been warn. Do you want to continue?')
+  const shouldContinue = confirm('This will trigger a force brute algorithm to find the string. It may take a while, it will block the main thread of this tab, and the only way of stopping is closing the tab. I am not sure really what the consequences are, but if you continue you have been warn. Do you want to continue?')
 
   if (!shouldContinue)
     return
@@ -144,9 +144,9 @@ watch(showShiny, () => {
 <template>
   <div>
     <div mx-auto size-156 v-html="identicon" />
-    <form nq-mt-32 @submit.prevent="">
+    <form f-mt-md @submit.prevent="">
       <div flex="~ gap-16 items-center justify-end">
-        <label flex="~ gap-8" text-right text-sm nq-mt-16>
+        <label flex="~ gap-8" text-right f-text-sm f-mt-xs>
           <input v-model="showShiny" type="checkbox" nq-switch>
           Show Shiny
         </label>
@@ -155,16 +155,16 @@ watch(showShiny, () => {
           {{ copied ? 'Copied!' : 'Copy SVG' }}
         </button>
       </div>
-      <PillSelector v-model="activeSection" :options mx-auto nq-mt-16 />
+      <PillSelector v-model="activeSection" :options mx-auto f-mt-xs />
       <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>
         <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>
           <button group bg-transparent @click="select(svg)">
             <div v-html="getSvg(svg)" />
-            <span rounded-2 bg-neutral-300 px-8 py-3 font-mono op-0 text-lg group-hocus:op-100>{{ path.split('/').slice(3).join('/') }}</span>
+            <span rounded-2 bg-neutral-300 px-8 py-3 font-mono op-0 f-text-lg group-hocus:op-100>{{ path.split('/').slice(3).join('/') }}</span>
           </button>
         </li>
       </ul>
-      <div v-if="activeSection === 'colors'" w-full nq-mt-32>
+      <div v-if="activeSection === 'colors'" w-full f-mt-md>
         <label flex="~ items-center gap-8">
           <span mr-auto text-10 nq-label>Main color</span>
           <div v-for="color in identiconColors" :key="color">
@@ -172,21 +172,21 @@ watch(showShiny, () => {
           </div>
         </label>
 
-        <label flex="~ items-center gap-8" nq-mt-32>
+        <label flex="~ items-center gap-8" f-mt-md>
           <span mr-auto text-10 nq-label>Background color</span>
           <div v-for="color in identiconColors" :key="color">
             <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
           </div>
         </label>
 
-        <label flex="~ items-center gap-8" nq-mt-32>
+        <label flex="~ items-center gap-8" f-mt-md>
           <span mr-auto text-10 nq-label>Accent color</span>
           <div v-for="color in identiconColors" :key="color">
             <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
           </div>
         </label>
       </div>
-      <MaterialSelector v-if="activeSection === 'material'" v-model="activeMaterial" nq-mt-16 />
+      <MaterialSelector v-if="activeSection === 'material'" v-model="activeMaterial" f-mt-xs />
     </form>
     <button nq-pill-sm mx-auto mb-96 mt-48 nq-pill-blue @click="generateString">
       Find a string that generates this identicon

@@ -17,13 +17,13 @@ const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'br
         type="text"
         placeholder="Enter something..."
         rounded-full
-        text-lg
+        f-text-lg
         nq-input-box
       >
     </div>
 
     <div flex="~ gap-16 items-center justify-end">
-      <label flex="~ gap-8" text-right text-sm nq-mt-16>
+      <label flex="~ gap-8" text-right f-text-sm f-mt-xs>
         <input v-model="showShiny" type="checkbox" nq-switch>
         Show Shiny
       </label>
@@ -31,14 +31,14 @@ const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'br
     <div flex="~ col items-center gap-16">
       <nimiq-shiny-identicon v-if="showShiny" :material="activeMaterial" :input />
       <nimiq-identicon v-else :input />
-      <div op-50 text-sm>
+      <div op-50 f-text-sm>
         This is rendered using the Web Component
       </div>
 
       <MaterialSelector v-if="showShiny" v-model="activeMaterial" />
     </div>
 
-    <div flex="~ col gap-8" op-70 text-sm>
+    <div flex="~ col gap-8" op-70 f-text-sm>
       <p>To use the web component in your project:</p>
       <pre rounded-8 rounded-lg bg-neutral-300 p-16>
 import 'identicons-esm/<span v-if="showShiny">shiny-</span>web-component'

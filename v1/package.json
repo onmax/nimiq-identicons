@@ -15,21 +15,21 @@
     "build": "gulp"
   },
   "dependencies": {
-    "dom-parser": "^0.1.5"
+    "dom-parser": "^1.1.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
-    "gulp": "^4.0.0",
+    "@babel/core": "^7.26.8",
+    "@babel/plugin-transform-modules-commonjs": "^7.26.3",
+    "gulp": "^5.0.0",
     "gulp-babel": "^8.0.0",
-    "gulp-cheerio": "^0.6.3",
+    "gulp-cheerio": "^1.0.0",
     "gulp-concat": "^2.6.1",
-    "gulp-remove-code": "^3.0.2",
-    "gulp-rename": "^1.2.2",
-    "gulp-replace": "^1.0.0",
-    "gulp-svgmin": "^2.2.0",
-    "gulp-svgstore": "^6.1.1",
-    "gulp-uglify": "^3.0.0",
+    "gulp-remove-code": "^3.0.4",
+    "gulp-rename": "^2.0.0",
+    "gulp-replace": "^1.1.4",
+    "gulp-svgmin": "^4.1.0",
+    "gulp-svgstore": "^9.0.0",
+    "gulp-uglify": "^3.0.2",
     "uglify-es": "^3.3.9"
   }
 }

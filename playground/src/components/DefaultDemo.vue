@@ -50,19 +50,18 @@ const identiconV1Size = computed(() => getStrSize(identiconV1.value))
 
 <template>
   <div flex="~ col" w-full>
-    <form nq-mt-32 @submit.prevent>
+    <form f-mt-md @submit.prevent>
       <input
         v-model="input"
         type="text"
         placeholder="Enter something..."
-        rounded-full
-        text-lg
-        nq-input-box
+
+        rounded-full nq-input-box f-text-lg
       >
     </form>
 
     <div flex="~ gap-16 items-center justify-end">
-      <label flex="~ gap-8" text-right text-sm nq-mt-16>
+      <label flex="~ gap-8" text-right f-text-sm f-mt-xs>
         <input v-model="showShiny" type="checkbox" nq-switch>
         Show Shiny
       </label>
@@ -72,13 +71,13 @@ const identiconV1Size = computed(() => getStrSize(identiconV1.value))
       </button>
     </div>
 
-    <div flex="~ gap-8 col md:row justify-around" w-full nq-mt-32>
+    <div flex="~ gap-8 col md:row justify-around" w-full f-mt-md>
       <div flex="~ items-center col">
-        <h2 text="xs blue" ring="1.5 blue/60" w-max rounded-full px-16 py-4 font-semibold nq-label>
+        <h2 text="blue" ring="1.5 blue/60" w-max rounded-full px-16 py-4 font-semibold nq-label f-text-xs>
           New
         </h2>
-        <img :src="identicon" size-160 alt="" nq-mt-16>
-        <div flex="~ items-center" text-xs nq-label>
+        <img :src="identicon" alt="" f-mt-xs>
+        <div flex="~ items-center" nq-label f-text-xs>
           <p title="size of the svg as data URI">
             {{ identiconSize }}kb
           </p>
@@ -88,16 +87,16 @@ const identiconV1Size = computed(() => getStrSize(identiconV1.value))
           </p>
         </div>
 
-        <MaterialSelector v-if="showShiny" v-model="activeMaterial" nq-mt-32 />
+        <MaterialSelector v-if="showShiny" v-model="activeMaterial" f-mt-md />
       </div>
 
       <div flex="~ col items-center">
-        <h2 text="xs neutral-700" ring="1.5 neutral-500" w-max rounded-full px-16 py-4 font-semibold nq-label>
+        <h2 text="neutral-700" ring="1.5 neutral-500" w-max rounded-full px-16 py-4 font-semibold nq-label f-text-xs>
           V1
         </h2>
-        <img :src="identiconV1" alt="" nq-mt-16>
+        <img :src="identiconV1" alt="" f-mt-xs>
         <div id="container" />
-        <div flex="~ items-center" text-xs nq-label>
+        <div flex="~ items-center" nq-label f-text-xs>
           <p title="size of the svg as data URI">
             {{ identiconV1Size }}kb
           </p>
@@ -106,7 +105,7 @@ const identiconV1Size = computed(() => getStrSize(identiconV1.value))
             {{ identiconV1Duration }}ms
           </p>
         </div>
-        <p text-xs>
+        <p f-text-xs>
           Not sure how to fix this in production :/
         </p>
       </div>
