@@ -1,4 +1,4 @@
-// import { presetRemToPx } from '@unocss/preset-rem-to-px'
+import { createExternalPackageIconLoader } from '@iconify/utils/lib/loader/external-pkg'
 import { presetNimiq } from 'nimiq-css'
 import { defineConfig, presetAttributify, presetIcons, presetUno } from 'unocss'
 import { presetFluidSizing } from 'unocss-preset-fluid-sizing'
@@ -14,8 +14,11 @@ export default defineConfig({
       utilities: true,
       staticContent: true,
     }),
-    // presetRemToPx({ baseFontSize: 4 }),
-    presetIcons(),
+    presetIcons({
+      collections: {
+        ...createExternalPackageIconLoader('@iconify-json/nimiq'),
+      },
+    }),
     // @ts-expect-error The preset is fine
     presetScalePx(),
     presetFluidSizing(),

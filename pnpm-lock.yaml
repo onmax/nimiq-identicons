@@ -93,15 +93,15 @@ importers:
       '@iconify-json/nimiq':
         specifier: https://pkg.pr.new/onmax/nimiq-ui/nimiq-icons@814b6a1
         version: nimiq-icons@https://pkg.pr.new/onmax/nimiq-ui/nimiq-icons@814b6a1
+      '@iconify/utils':
+        specifier: ^2.3.0
+        version: 2.3.0
       '@tsconfig/node20':
         specifier: ^20.1.4
         version: 20.1.4
       '@types/node':
         specifier: ^22.13.2
         version: 22.13.2
-      '@unocss/preset-rem-to-px':
-        specifier: ^65.4.3
-        version: 65.4.3
       '@unocss/reset':
         specifier: ^65.4.3
         version: 65.4.3
@@ -1212,9 +1212,6 @@ packages:
 
   '@unocss/preset-mini@65.4.3':
     resolution: {integrity: sha512-JajAF18DKJRXgd9usrAYTcHUtZy606mD396ZswDgw/mUSu529tuiT6LOD43aJMYHgPEw7wKYjiGFHkeBTHijuQ==}
-
-  '@unocss/preset-rem-to-px@65.4.3':
-    resolution: {integrity: sha512-s7AYKVr40VwxefLK84Zdf92dnZTLTixZHEFRxEgxawpdC/1JaWwfGNsDnQDTPWFovaYhsO5gpUue2tlilxTUyQ==}
 
   '@unocss/preset-tagify@65.4.3':
     resolution: {integrity: sha512-8/MbMbgdvj1A87XNVVzD8gFVqywaSJAD3Bv8RwjcFn0rwlgZY0PdTBYo3M3FH25axb4znzXBmLZdEBVZOGUosg==}
@@ -5174,10 +5171,6 @@ snapshots:
       '@unocss/core': 65.4.3
       '@unocss/extractor-arbitrary-variants': 65.4.3
       '@unocss/rule-utils': 65.4.3
-
-  '@unocss/preset-rem-to-px@65.4.3':
-    dependencies:
-      '@unocss/core': 65.4.3
 
   '@unocss/preset-tagify@65.4.3':
     dependencies:

@@ -21,9 +21,9 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.2.0",
     "@iconify-json/nimiq": "https://pkg.pr.new/onmax/nimiq-ui/nimiq-icons@814b6a1",
+    "@iconify/utils": "^2.3.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.13.2",
-    "@unocss/preset-rem-to-px": "^65.4.3",
     "@unocss/reset": "^65.4.3",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-typescript": "^14.4.0",
