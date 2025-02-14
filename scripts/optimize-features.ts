@@ -1,9 +1,9 @@
+import type { PluginConfig } from 'svgo'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { cwd } from 'node:process'
 import { join } from 'pathe'
 import { optimize } from 'svgo'
 import tinyglob from 'tiny-glob'
-import type { PluginConfig } from 'svgo'
 
 async function optimizeSvgFile(inputPath: string, outputPath: string) {
   try {
