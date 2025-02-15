@@ -51,7 +51,7 @@ We were having issues running the lib in workerd. That's it. But then, when I st
 
 While `gulp` is great and allows you to build the library, `vite` is the standard these days. With the old implementation, the library loaded all the features of svg into a single DOM element (using `dom-parser`) and from there, depending on the hash, it selected the features for the fiven hash. Then it ensabmages all the selected elements together with a predefined background and colors and runs an optimization process on each render.
 
-With the new approach, we run `svgo` with some defined plugins in dev and write the optimized svg to the folder. Then at runtime we just ensamble the selected optimized features and return the SVG. After the selected features have been retrieved, we just ensamlbe the SVG and return it. **We don't use `dom-parser` and we don't need to optimize the SVG at runtime**.
+With the new approach, we run `svgo` with some defined plugins in dev and write the optimized svg to the folder. Then at runtime we just assemble the selected optimized features and return the SVG. After the selected features have been retrieved, we just ensamlbe the SVG and return it. **We don't use `dom-parser` and we don't need to optimize the SVG at runtime**.
 
 ### Performance Comparison
 

@@ -4,15 +4,15 @@ import { defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams
 export const defaultBackgroundShape = `<path d="m126.072 8.437 31.956 55.003a15.918 15.918 0 0 1 2.158 7.999c0 2.808-.745 5.566-2.158 7.998l-31.956 55.003c-2.867 4.949-8.183 7.998-13.933 7.998H48.224c-5.75 0-11.066-3.049-13.933-7.998L2.336 79.437a15.96 15.96 0 0 1-2.15-7.998c0-2.808.741-5.566 2.15-7.999l31.96-55.003a16.047 16.047 0 0 1 5.889-5.854A16.173 16.173 0 0 1 48.229.438h63.91c5.75 0 11.066 3.05 13.933 7.999Z" />`
 
 export const materialColors: Record<IdenticonMaterial, [string, string]> = {
-  gold: ['#ffd767', '#bb9b25'],
-  silver: ['#f2f2f2', '#d9d9d9'],
-  bronze: ['#c59e91', '#b79083'],
+  gold: ['#FFD767', '#BB9B25'],
+  silver: ['#ECF5FC', '#BEC8D3'],
+  bronze: ['#FCD1BE', '#9E6262'],
 }
 export function gradientNoise(material: IdenticonMaterial, seed: number = 42): string {
   return `<filter id="o" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB"><feTurbulence type="turbulence" baseFrequency="1" numOctaves="4" seed="${seed}" stitchTiles="stitch" result="turbulence"/><feSpecularLighting surfaceScale="3" specularConstant="3" specularExponent="20" lighting-color="${materialColors[material][0]}" in="turbulence" result="specularLighting"><feDistantLight azimuth="3" elevation="19"/></feSpecularLighting><feFlood flood-color="${materialColors[material][1]}" result="solidColor"/><feComposite in="solidColor" in2="specularLighting" operator="in" result="final"/></filter>`
 }
 
-export function ensambleShinySvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top }, innerShadow, backgroundShape, circleShape, material }: ShinyIdenticonParams): string {
+export function assembleShinySvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top }, innerShadow, backgroundShape, circleShape, material }: ShinyIdenticonParams): string {
   innerShadow ||= defaultShadow
   backgroundShape ||= defaultBackgroundShape
   circleShape ||= defaultCircleShape(main)
@@ -33,7 +33,7 @@ export function ensambleShinySvg({ colors: { accent, background, main }, section
  */
 export async function createShinyIdenticon(input: string, options: CreateShinyIdenticonOptions): Promise<string> {
   const params = await getIdenticonsParams(input)
-  const svg = ensambleShinySvg({ ...params, material: options.material })
+  const svg = assembleShinySvg({ ...params, material: options.material })
   const formatted = await formatIdenticon(svg, options)
   return formatted
 }

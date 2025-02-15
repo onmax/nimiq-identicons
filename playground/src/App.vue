@@ -22,7 +22,7 @@ const view = useLocalStorage('view', 'default')
     </div>
   </header>
   <main flex="~ col justify-center items-center" mx-auto max-w-1400 px-32>
-    <h1 f-text-xl f-mt-md lh-none>
+    <h1 lh-none f-text-xl f-mt-md>
       Nimiq Identicons Playground
     </h1>
 

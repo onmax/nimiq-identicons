@@ -16,9 +16,8 @@ const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'br
         v-model="input"
         type="text"
         placeholder="Enter something..."
-        rounded-full
-        f-text-lg
-        nq-input-box
+
+        rounded-full nq-input-box f-text-lg
       >
     </div>
 
@@ -44,7 +43,8 @@ const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'br
 import 'identicons-esm/<span v-if="showShiny">shiny-</span>web-component'
 
 // Then in your HTML:
-&lt;nimiq-<span v-if="showShiny">shiny-</span>identicon input="hello@example.com">&lt;/nimiq-identicon></pre>
+&lt;nimiq-<span v-if="showShiny">shiny-</span>identicon input="hello@example.com">&lt;/nimiq<span v-if="showShiny">-shiny</span>-identicon>
+      </pre>
     </div>
   </div>
 </template>

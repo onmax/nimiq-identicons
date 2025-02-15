@@ -8,9 +8,19 @@ export const defaultBackgroundShape = `<path d="m126.074 16.999 31.955 55.003a15
  * @param params - Object containing colors and sections for the identicon
  * @param params.colors - RGB colors for accent, background, and main elements
  * @param params.sections - SVG path strings for bottom, face, sides, and top elements
+ * @param params.sections.bottom - SVG path string for the bottom section
+ * @param params.sections.face - SVG path string for the face section
+ * @param params.sections.sides - SVG path string for the sides section
+ * @param params.sections.top - SVG path string for the top section
+ * @param params.innerShadow - SVG filter string for the inner shadow
+ * @param params.backgroundShape - SVG path string for the background shape
+ * @param params.circleShape - SVG path string for the circle shape
+ * @param params.colors.accent - RGB color for the accent elements
+ * @param params.colors.background - RGB color for the background elements
+ * @param params.colors.main - RGB color for the main elements
  * @returns Complete SVG string of the assembled identicon
  */
-export function ensambleSvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top }, innerShadow, backgroundShape, circleShape }: IdenticonParams): string {
+export function assembleSvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top }, innerShadow, backgroundShape, circleShape }: IdenticonParams): string {
   innerShadow ||= defaultShadow
   backgroundShape ||= defaultBackgroundShape
   circleShape ||= defaultCircleShape(main)
@@ -26,7 +36,7 @@ export function ensambleSvg({ colors: { accent, background, main }, sections: { 
  */
 export async function createIdenticon(input: string, options: CreateIdenticonOptions = {}): Promise<string> {
   const params = await getIdenticonsParams(input)
-  const svg = ensambleSvg(params)
+  const svg = assembleSvg(params)
   const formatted = await formatIdenticon(svg, options)
   return formatted
 }

@@ -1,4 +1,7 @@
+import { cp } from 'node:fs/promises'
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'pathe'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
@@ -25,5 +28,16 @@ export default defineConfig({
       rollupTypes: true,
       include: ['src'],
     }),
+    {
+      name: 'features', // the name of your custom plugin. Could be anything.
+      closeBundle: async () => {
+        const __dirname = dirname(fileURLToPath(import.meta.url))
+        const srcDir = join(__dirname, 'src/features/optimized')
+        const destDir = join(__dirname, 'dist/features')
+        await cp(srcDir, destDir, { recursive: true })
+        console.log('✓ Copied optimized features to dist')
+      },
+    },
+
   ],
 })

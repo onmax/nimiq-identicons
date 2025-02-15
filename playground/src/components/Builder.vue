@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Colors, IdenticonMaterial, Section, Sections } from 'identicons-esm/types'
 import { useClipboard, useLocalStorage } from '@vueuse/core'
-import { ensambleSvg } from 'identicons-esm'
+import { assembleSvg } from 'identicons-esm'
 import { getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm/core'
-import { ensambleShinySvg, gradientNoise } from 'identicons-esm/shiny'
+import { assembleShinySvg, gradientNoise } from 'identicons-esm/shiny'
 import { computed, onMounted, ref, watch } from 'vue'
 import MaterialSelector from './MaterialSelector.vue'
 import PillSelector from './PillSelector.vue'
@@ -130,8 +130,8 @@ async function generateString() {
 
 const identicon = computed(() => {
   return showShiny.value
-    ? ensambleShinySvg({ colors: colors.value, sections: sections.value, material: activeMaterial.value })
-    : ensambleSvg({ colors: colors.value, sections: sections.value })
+    ? assembleShinySvg({ colors: colors.value, sections: sections.value, material: activeMaterial.value })
+    : assembleSvg({ colors: colors.value, sections: sections.value })
 })
 
 const { copy, copied } = useClipboard({ source: identicon })
