@@ -3,7 +3,7 @@ import type { Colors, IdenticonMaterial, Section, Sections } from 'identicons-es
 import { useClipboard, useLocalStorage } from '@vueuse/core'
 import { assembleSvg } from 'identicons-esm'
 import { getIdenticonsParams, colors as identiconColors, identiconFeatures } from 'identicons-esm/core'
-import { assembleShinySvg, gradientNoise } from 'identicons-esm/shiny'
+import { assembleShinySvg } from 'identicons-esm/shiny'
 import { computed, onMounted, ref, watch } from 'vue'
 import MaterialSelector from './MaterialSelector.vue'
 import PillSelector from './PillSelector.vue'
