@@ -38,6 +38,54 @@ const imgSrc = await formatIdenticonToBase64(createIdenticon(input, { shouldVali
 <img src="imgSrc" alt="Identicon" />
 ```
 
+## Identicons as Web Component
+
+```html
+<nimiq-identicon input="Your input here" should-validate-address="false"></nimiq-identicon>
+<nimiq-shiny-identicon input="Your input here" should-validate-address="false" material="gold"></nimiq-shiny-identicon>
+```
+
+Make sure to import the web components in your project before using them.
+
+### Web Components in Vue 3
+
+```vue
+<script setup lang="ts">
+import type { IdenticonMaterial } from 'identicons-esm/types'
+import 'identicons-esm/web-components'
+import 'identicons-esm/shiny-web-components'
+
+const input = 'Your input here'
+const shouldValidateAddress = false
+const material: IdenticonMaterial = 'gold'
+</script>
+
+<template>
+  <nimiq-identicon :input="input" :should-validate-address="shouldValidateAddress" />
+  <nimiq-shiny-identicon :input="input" :should-validate-address="shouldValidateAddress" :material="material" />
+</template>
+```
+
+#### Vite warning
+
+To avoid a warning in development mode, you have to let Vite know that the web component exists:
+
+```ts
+// vite.config.ts
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [vue({
+    template: {
+      compilerOptions: {
+        isCustomElement: tag => ['nimiq-identicon', 'nimiq-shiny-identicon'].includes(tag),
+      }
+    }
+  })],
+})
+```
+
 > [!WARNING]
 > This is a PoC and the API might change
 
