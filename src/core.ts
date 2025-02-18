@@ -1,6 +1,5 @@
 import type { Colors, ColorType, CreateIdenticonOptions, IdenticonParams, Section, Sections } from './types'
 import { ValidationUtils } from '@nimiq/utils'
-import { identiconPlaceholder } from '.'
 
 export const defaultShadow = '<path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>'
 export const defaultCircleShape = (color: string): string => `<circle cx="80" cy="80" r="40" fill="${color}"/>`
@@ -11,8 +10,7 @@ export const defaultCircleShape = (color: string): string => `<circle cx="80" cy
  * @returns Promise containing the sections and colors for the identicon
  */
 export function getIdenticonsParams(input: string): IdenticonParams {
-  const formattedInput = input.replace(/[+ ]/g, '').toUpperCase().match(/.{4}/g)!.join(' ').trim()
-  const hash = makeHash(formattedInput)
+  const hash = makeHash(input)
   const main = Number(hash[0])
   const background = Number(hash[2])
   const accent = Number(hash[11])
@@ -116,8 +114,14 @@ export function sectionsToSvg(sectionsIndexes: Record<Section, number>): Section
 
 export function validateInput(input: string, options: CreateIdenticonOptions = {}): string | undefined {
   const { shouldValidateAddress = true } = options
-  if (shouldValidateAddress && !ValidationUtils.isValidAddress(input)) {
+  if (shouldValidateAddress === false)
+    return input
+
+  if (!ValidationUtils.isValidAddress(input)) {
     console.warn(`[Nimiq Identicon] - Invalid address: \`${input}\``)
-    return identiconPlaceholder
+    return
   }
+
+  const formattedInput = input.replace(/[+ ]/g, '').toUpperCase().match(/.{4}/g)!.join(' ').trim()
+  return formattedInput
 }

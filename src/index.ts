@@ -34,14 +34,14 @@ export const identiconPlaceholderBase64 = 'data:image/svg+xml;base64,PHN2ZyB4bWx
 /**
  * Generate an identicon from a string
  *
- * @param input The string to generate the identicon from
+ * @param rawInput The string to generate the identicon from
  * @param options The options for the identicon
  * @returns The identicon as a string
  */
-export function createIdenticon(input: string, options: CreateIdenticonOptions = {}): string {
-  const placeholder = validateInput(input, options)
-  if (placeholder)
-    return placeholder
+export function createIdenticon(rawInput: string, options: CreateIdenticonOptions = {}): string {
+  const input = validateInput(rawInput, options)
+  if (!input)
+    return identiconPlaceholder
   const params = getIdenticonsParams(input)
   const svg = assembleSvg(params)
   return svg

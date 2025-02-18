@@ -24,17 +24,12 @@ export class ShinyIdenticonElement extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): void {
-    if (name === 'input') {
+    if (name === 'input')
       this.currentInput = newValue || ''
-    }
-    else if (name === 'material') {
-      if (!['bronze', 'silver', 'gold', 'platinum'].includes(newValue || ''))
-        throw new Error('Invalid material attribute. Must be one of: bronze, silver, gold, platinum')
+    else if (name === 'material')
       this.currentMaterial = newValue as IdenticonMaterial || undefined
-    }
-    else if (name === 'should-validate-address') {
+    else if (name === 'should-validate-address')
       this.currentShouldValidate = newValue === 'true' || newValue === null
-    }
 
     this.updateIdenticon(this.currentInput || '')
   }
