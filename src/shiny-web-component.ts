@@ -3,7 +3,7 @@ import { identiconPlaceholder } from '.'
 import { createShinyIdenticon } from './shiny'
 
 const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; }</style>`
-const placeholder = `${hostStyles}${identiconPlaceholder}`
+const placeholder = identiconPlaceholder
 
 export class ShinyIdenticonElement extends HTMLElement {
   static observedAttributes = ['input', 'material', 'should-validate-address']
@@ -16,7 +16,11 @@ export class ShinyIdenticonElement extends HTMLElement {
   constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
-    this.shadow.innerHTML = placeholder
+    // Add styles first, then content
+    this.shadow.innerHTML = hostStyles
+    const content = document.createElement('div')
+    content.innerHTML = placeholder
+    this.shadow.appendChild(content)
   }
 
   attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): void {
@@ -37,7 +41,7 @@ export class ShinyIdenticonElement extends HTMLElement {
 
   private updateIdenticon(input: string): void {
     if (!input) {
-      this.shadow.innerHTML = identiconPlaceholder
+      this.shadow.lastElementChild!.innerHTML = placeholder
       return
     }
 
@@ -46,11 +50,11 @@ export class ShinyIdenticonElement extends HTMLElement {
         material: this.currentMaterial!,
         shouldValidateAddress: this.currentShouldValidate,
       })
-      this.shadow.innerHTML = `${hostStyles}${identicon}`
+      this.shadow.lastElementChild!.innerHTML = identicon
     }
     catch (error) {
       console.error('Failed to generate identicon:', error)
-      this.shadow.innerHTML = placeholder
+      this.shadow.lastElementChild!.innerHTML = placeholder
     }
   }
 }

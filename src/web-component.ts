@@ -1,7 +1,7 @@
 import { createIdenticon, identiconPlaceholder } from '.'
 
 const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; }</style>`
-const placeholder = `${hostStyles}${identiconPlaceholder}`
+const placeholder = identiconPlaceholder
 
 export class IdenticonElement extends HTMLElement {
   static observedAttributes = ['input', 'should-validate-address']
@@ -14,7 +14,11 @@ export class IdenticonElement extends HTMLElement {
   constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
-    this.shadow.innerHTML = placeholder
+    // Add styles first, then content
+    this.shadow.innerHTML = hostStyles
+    const content = document.createElement('div')
+    content.innerHTML = placeholder
+    this.shadow.appendChild(content)
   }
 
   async attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): Promise<void> {
@@ -28,17 +32,17 @@ export class IdenticonElement extends HTMLElement {
 
   private updateIdenticon(input: string): void {
     if (!input) {
-      this.shadow.innerHTML = identiconPlaceholder
+      this.shadow.lastElementChild!.innerHTML = placeholder
       return
     }
 
     try {
       const identicon = createIdenticon(input, { shouldValidateAddress: this.currentShouldValidateAddress })
-      this.shadow.innerHTML = `${hostStyles}${identicon}`
+      this.shadow.lastElementChild!.innerHTML = identicon
     }
     catch (error) {
       console.error('Failed to generate identicon:', error)
-      this.shadow.innerHTML = placeholder
+      this.shadow.lastElementChild!.innerHTML = placeholder
     }
   }
 }
