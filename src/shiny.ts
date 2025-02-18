@@ -34,6 +34,11 @@ export function createShinyIdenticon(input: string, options: CreateShinyIdentico
   const placeholder = validateInput(input, options)
   if (placeholder)
     return placeholder
+  const material = options.material
+  if (!(['bronze', 'silver', 'gold'] as IdenticonMaterial[]).includes(material)) {
+    console.warn(`Invalid material: ${material}. Defaulting to 'bronze'`)
+    options.material = 'bronze'
+  }
   const params = getIdenticonsParams(input)
   const svg = assembleShinySvg({ ...params, material: options.material })
   return svg
