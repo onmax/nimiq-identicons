@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@nimiq/utils':
+        specifier: ^0.12.1
+        version: 0.12.1
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^4.2.1
@@ -884,6 +888,9 @@ packages:
   '@nimiq/identicons@1.6.2':
     resolution: {integrity: sha512-O8XaSRoOwDjnQjOaWIi4wnELoYSu48WXfApYtz2dzMlFpY+pzekTmQaqS2kYR9uj+6KUiUfBSIVPJUhpWkp88w==}
 
+  '@nimiq/utils@0.12.1':
+    resolution: {integrity: sha512-AnOPakCbnSkGpWnc4RhG1S4xysI4tWXn+rCVImKMOkqG9GMAQrg9z2/g8y3H4Ngy7BivhfnsfbKIBdspyGPE/w==}
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -1519,6 +1526,10 @@ packages:
 
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+
+  big-integer@1.6.52:
+    resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
+    engines: {node: '>=0.6'}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -4527,6 +4538,10 @@ snapshots:
     dependencies:
       dom-parser: 0.1.6
 
+  '@nimiq/utils@0.12.1':
+    dependencies:
+      big-integer: 1.6.52
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -5332,6 +5347,8 @@ snapshots:
   balanced-match@1.0.2: {}
 
   base64-js@1.5.1: {}
+
+  big-integer@1.6.52: {}
 
   binary-extensions@2.3.0: {}
 

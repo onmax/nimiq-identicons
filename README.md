@@ -9,6 +9,7 @@ A rewrite of the Identicon module with ESM support.
 - About 2 times faster on startup and 5 times faster on re-rendering than previous version
 - Produces about 25% smaller SVG, thanks to svgo
 - Simplify bundling compare to previous version
+- No more promises!
 
 ## Installation
 
@@ -20,7 +21,21 @@ npm install identicons-esm
 import { createIdenticon } from 'identicons-esm'
 
 const input = 'Your input here'
-const svg = await createIdenticon(input)
+const svg = createIdenticon(input, { shouldValidateAddress: false }) // shouldValidateAddress is `true` by default
+```
+
+## Identicons as `<img>`
+
+```ts
+import { createIdenticon } from 'identicons-esm'
+import { formatIdenticonToBase64 } from 'identicons-esm/core'
+
+const input = 'Your input here'
+const imgSrc = await formatIdenticonToBase64(createIdenticon(input, { shouldValidateAddress: false }))
+```
+
+```html
+<img src="imgSrc" alt="Identicon" />
 ```
 
 > [!WARNING]
@@ -32,7 +47,7 @@ const svg = await createIdenticon(input)
 import { getIdenticonsParams } from 'identicons-esm/core'
 
 const input = 'Your input here'
-const { colors, sections } = await getIdenticonsParams(input)
+const { colors, sections } = getIdenticonsParams(input)
 
 // colors.background -> '#0ab123'
 // colors.main -> '#0ab123'
@@ -85,7 +100,7 @@ const svg = await Identicons.svg(input)
 import { createIdenticon } from 'identicons-esm'
 
 const input = 'Your input here'
-const svg = await createIdenticon(input)
+const svg = createIdenticon(input)
 //    ^ type string
 ```
 
@@ -109,7 +124,7 @@ const svg = await Identicons.toDataUri(input)
 import { createIdenticon } from 'identicons-esm'
 
 const input = 'Your input here'
-const svg = await createIdenticon(input, { format: 'image/svg+xml' })
+const svg = createIdenticon(input, { format: 'image/svg+xml' })
 //    ^ type string
 ```
 

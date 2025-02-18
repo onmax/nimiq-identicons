@@ -1,4 +1,6 @@
 import type { Colors, ColorType, CreateIdenticonOptions, IdenticonParams, Section, Sections } from './types'
+import { ValidationUtils } from '@nimiq/utils'
+import { identiconPlaceholder } from '.'
 
 export const defaultShadow = '<path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>'
 export const defaultCircleShape = (color: string): string => `<circle cx="80" cy="80" r="40" fill="${color}"/>`
@@ -8,8 +10,9 @@ export const defaultCircleShape = (color: string): string => `<circle cx="80" cy
  * @param input - The string to generate the identicon parameters from
  * @returns Promise containing the sections and colors for the identicon
  */
-export async function getIdenticonsParams(input: string): Promise<IdenticonParams> {
-  const hash = makeHash(input)
+export function getIdenticonsParams(input: string): IdenticonParams {
+  const formattedInput = input.replace(/[+ ]/g, '').toUpperCase().match(/.{4}/g)!.join(' ').trim()
+  const hash = makeHash(formattedInput)
   const main = Number(hash[0])
   const background = Number(hash[2])
   const accent = Number(hash[11])
@@ -18,7 +21,7 @@ export async function getIdenticonsParams(input: string): Promise<IdenticonParam
   const sides = Number(hash[7] + hash[8])
   const bottom = Number(hash[9] + hash[10])
 
-  const sections = await sectionsToSvg({ face, top, sides, bottom })
+  const sections = sectionsToSvg({ face, top, sides, bottom })
   const colors = colorsToRgb({ accent, background, main })
 
   return { sections, colors }
@@ -27,24 +30,15 @@ export async function getIdenticonsParams(input: string): Promise<IdenticonParam
 /**
  * Formats the SVG string into the requested output format
  * @param svg - The SVG string to format
- * @param options - Object containing format and size options
- * @param options.format - The desired output format. See {@link IdenticonFormat}
  * @returns Promise containing the formatted identicon string
  */
-export async function formatIdenticon(svg: string, { format = 'svg' }: CreateIdenticonOptions = {}): Promise<string> {
-  switch (format) {
-    case 'image/svg+xml': {
-      const base64String = typeof window !== 'undefined'
-        ? btoa(svg)
-        // eslint-disable-next-line unicorn/prefer-node-protocol
-        : (await import('buffer')).Buffer.from(svg).toString('base64')
+export async function formatIdenticonToBase64(svg: string): Promise<string> {
+  const base64String = typeof window !== 'undefined'
+    ? btoa(svg)
+  // eslint-disable-next-line unicorn/prefer-node-protocol
+    : (await import('buffer')).Buffer.from(svg).toString('base64')
 
-      return `data:image/svg+xml;base64,${base64String}`
-    }
-    case 'svg':
-    default:
-      return svg
-  }
+  return `data:image/svg+xml;base64,${base64String}`
 }
 
 export const colors = ['#FC8702', '#D94432', '#E9B213', '#1A5493', '#0582CA', '#5961A8', '#21BCA5', '#FA7268', '#88B04B', '#795548'] as const
@@ -112,9 +106,18 @@ export function sectionToSvg(section: Section, index: number): string {
   return svg
 }
 
-export async function sectionsToSvg(sectionsIndexes: Record<Section, number>): Promise<Sections> {
-  const [bottom, face, sides, top] = await Promise.all(
-    (['bottom', 'face', 'sides', 'top'] satisfies Section[]).map(s => sectionToSvg(s, sectionsIndexes[s])),
-  )
+export function sectionsToSvg(sectionsIndexes: Record<Section, number>): Sections {
+  const bottom = sectionToSvg('bottom', sectionsIndexes.bottom)
+  const top = sectionToSvg('top', sectionsIndexes.top)
+  const sides = sectionToSvg('sides', sectionsIndexes.sides)
+  const face = sectionToSvg('face', sectionsIndexes.face)
   return { bottom, top, sides, face }
+}
+
+export function validateInput(input: string, options: CreateIdenticonOptions = {}): string | undefined {
+  const { shouldValidateAddress = true } = options
+  if (shouldValidateAddress && !ValidationUtils.isValidAddress(input)) {
+    console.warn(`[Nimiq Identicon] - Invalid address: \`${input}\``)
+    return identiconPlaceholder
+  }
 }

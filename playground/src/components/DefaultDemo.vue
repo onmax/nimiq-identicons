@@ -16,13 +16,14 @@ const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'br
 
 const input = useLocalStorage('input-default', 'nimiq')
 const showShiny = useLocalStorage('show-shiny', false)
-watch([input, showShiny, activeMaterial], async () => {
+const shouldValidateAddress = useLocalStorage('should-validate-address', false)
+watch([input, showShiny, activeMaterial], () => {
   if (!input.value)
     return
   const start = performance.now()
   identicon.value = showShiny.value
-    ? await createShinyIdenticon(input.value, { format: 'image/svg+xml', material: activeMaterial.value })
-    : await createIdenticon(input.value, { format: 'image/svg+xml' })
+    ? createShinyIdenticon(input.value, { material: activeMaterial.value, shouldValidateAddress: shouldValidateAddress.value })
+    : createIdenticon(input.value, { shouldValidateAddress: shouldValidateAddress.value })
   const end = performance.now()
   identiconDuration.value = Number((end - start).toFixed(2))
 }, { immediate: true })
@@ -64,6 +65,11 @@ const identiconV1Size = computed(() => getStrSize(identiconV1.value))
       <label flex="~ gap-8" text-right f-text-sm f-mt-xs>
         <input v-model="showShiny" type="checkbox" nq-switch>
         Show Shiny
+      </label>
+
+      <label flex="~ gap-8" text-right f-text-sm f-mt-xs>
+        <input v-model="shouldValidateAddress" type="checkbox" nq-switch>
+        Validate Address
       </label>
 
       <button type="button" mt-8 nq-pill nq-pill-secondary :class="{ 'bg-green': copied }" @click="() => copy()">

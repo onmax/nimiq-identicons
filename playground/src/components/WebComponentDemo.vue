@@ -6,6 +6,7 @@ import MaterialSelector from './MaterialSelector.vue'
 const input = useLocalStorage('web-component-input', 'nimiq')
 
 const showShiny = useLocalStorage('show-shiny', false)
+const shouldValidateAddress = useLocalStorage('should-validate-address', false)
 const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'bronze')
 </script>
 
@@ -26,10 +27,14 @@ const activeMaterial = useLocalStorage<IdenticonMaterial>('active-material', 'br
         <input v-model="showShiny" type="checkbox" nq-switch>
         Show Shiny
       </label>
+      <label flex="~ gap-8" text-right f-text-sm f-mt-xs>
+        <input v-model="shouldValidateAddress" type="checkbox" nq-switch>
+        Validate Address
+      </label>
     </div>
     <div flex="~ col items-center gap-16">
-      <nimiq-shiny-identicon v-if="showShiny" :material="activeMaterial" :input />
-      <nimiq-identicon v-else :input />
+      <nimiq-shiny-identicon v-if="showShiny" :material="activeMaterial" :input="input" :should-validate-address="String(shouldValidateAddress)" />
+      <nimiq-identicon v-else :input="input" :should-validate-address="String(shouldValidateAddress)" />
       <div op-50 f-text-sm>
         This is rendered using the Web Component
       </div>

@@ -8,10 +8,12 @@ export type IdenticonFormat = 'svg' | 'image/svg+xml' // | 'image/png'
 
 export interface CreateIdenticonOptions {
   /**
-   * The format of the encoded image. @see {@link IdenticonFormat}
-   * @default 'svg'
+   * Whether to validate the address before generating the identicon. If address is invalid, a warn will be logged
+   * and the placeholder will be returned.
+   *
+   * @default true
    */
-  format?: IdenticonFormat
+  shouldValidateAddress?: boolean
 }
 
 export type IdenticonMaterial = 'bronze' | 'silver' | 'gold'

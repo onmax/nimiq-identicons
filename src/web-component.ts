@@ -4,11 +4,12 @@ const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; 
 const placeholder = `${hostStyles}${identiconPlaceholder}`
 
 export class IdenticonElement extends HTMLElement {
-  static observedAttributes = ['input', 'shiny', 'ring']
+  static observedAttributes = ['input', 'should-validate-address']
 
   private shadow: ShadowRoot
 
   private currentInput: string | undefined
+  private currentShouldValidateAddress: boolean | undefined
 
   constructor() {
     super()
@@ -17,20 +18,22 @@ export class IdenticonElement extends HTMLElement {
   }
 
   async attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): Promise<void> {
-    if (name === 'input') {
+    if (name === 'input')
       this.currentInput = newValue || ''
-      await this.updateIdenticon(this.currentInput)
-    }
+    if (name === 'should-validate-address')
+      this.currentShouldValidateAddress = newValue === 'true' || newValue === null
+
+    this.updateIdenticon(this.currentInput || '')
   }
 
-  private async updateIdenticon(input: string): Promise<void> {
+  private updateIdenticon(input: string): void {
     if (!input) {
       this.shadow.innerHTML = identiconPlaceholder
       return
     }
 
     try {
-      const identicon = await createIdenticon(input)
+      const identicon = createIdenticon(input, { shouldValidateAddress: this.currentShouldValidateAddress })
       this.shadow.innerHTML = `${hostStyles}${identicon}`
     }
     catch (error) {
