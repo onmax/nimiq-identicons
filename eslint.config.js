@@ -6,6 +6,7 @@ export default antfu(
     type: 'lib',
     ignores: ['v1', 'playground'],
     formatters: true,
+    vue: true,
   },
   {
     files: ['**/*.vue'],
