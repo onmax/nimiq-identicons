@@ -1,5 +1,5 @@
 import type { Colors, ColorType, CreateIdenticonOptions, IdenticonFormat, IdenticonParams, Section, Sections } from './types'
-import { ValidationUtils } from '@nimiq/utils'
+import { ValidationUtils } from '@nimiq/utils/validation-utils'
 
 export const defaultShadow = '<path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>'
 export const defaultCircleShape = (color: string): string => `<circle cx="80" cy="80" r="40" fill="${color}"/>`

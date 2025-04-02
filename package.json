@@ -72,12 +72,13 @@
     "optimize-svg": "esno ./scripts/optimize-features.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepublishOnly": "nr build",
+    "prepublishOnly": "nr build && nr lint && nr typecheck && nr test",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "postinstall": "nr prepare && nr typecheck"
   },
   "dependencies": {
     "@nimiq/utils": "catalog:"
