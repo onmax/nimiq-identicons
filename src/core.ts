@@ -116,7 +116,9 @@ export function formatIdenticon(svg: string, format: IdenticonFormat = 'image/sv
   if (format === 'svg')
     return svg
 
-  // eslint-disable-next-line node/prefer-global/buffer
-  const base64 = globalThis.Buffer ? Buffer.from(svg).toString('base64') : globalThis.btoa(svg)
-  return `data:image/svg+xml;base64,${base64}`
+  const base64 = typeof globalThis.btoa === 'function'
+    ? globalThis.btoa(svg)
+    // eslint-disable-next-line node/prefer-global/buffer
+    : Buffer.from(svg).toString('base64')
+  return `data:${format};base64,${base64}`
 }
