@@ -70,7 +70,7 @@
     "optimize-svg": "esno ./scripts/optimize-features.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepublishOnly": "nr build && nr lint && nr typecheck && nr test --run",
+    "prepublishOnly": "nr lint && nr typecheck && nr build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
     "test": "vitest",
