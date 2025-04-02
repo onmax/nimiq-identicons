@@ -6,6 +6,7 @@ export default antfu(
     type: 'lib',
     ignores: ['v1', 'playground'],
     formatters: true,
+    pnpm: true,
     vue: true,
   },
   {

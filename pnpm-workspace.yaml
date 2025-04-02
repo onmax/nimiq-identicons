@@ -3,3 +3,27 @@ packages:
   - docs
   - packages/*
   - examples/*
+catalog:
+  '@antfu/eslint-config': ^4.11.0
+  '@antfu/ni': ^24.3.0
+  '@antfu/utils': ^9.1.0
+  '@nimiq/utils': ^0.12.3
+  '@types/node': ^22.13.17
+  buffer: ^6.0.3
+  bumpp: ^10.1.0
+  consola: ^3.4.2
+  eslint: ^9.23.0
+  esno: ^4.8.0
+  lint-staged: ^15.5.0
+  pathe: ^2.0.3
+  pnpm: ^10.7.1
+  simple-git-hooks: ^2.12.1
+  svgo: ^3.3.2
+  tiny-glob: ^0.2.9
+  typescript: ^5.8.2
+  vite: ^6.1.3
+  vite-plugin-dts: ^4.5.3
+  vitest: ^3.1.1
+onlyBuiltDependencies:
+  - esbuild
+  - simple-git-hooks
