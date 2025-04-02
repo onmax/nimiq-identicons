@@ -1,7 +1,8 @@
 {
-  "name": "identicons-esm",
+  "name": "identicons-esm-monorepo",
   "type": "module",
   "version": "1.0.0-beta.2",
+  "private": true,
   "packageManager": "pnpm@10.7.1",
   "description": "A rewrite of the Identicon module with ESM",
   "license": "MIT",
@@ -15,68 +16,18 @@
   },
   "keywords": [],
   "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "browser": "./dist/index.mjs",
-      "import": "./dist/index.mjs"
-    },
-    "./web-component": {
-      "types": "./dist/web-component.d.ts",
-      "browser": "./dist/web-component.mjs",
-      "import": "./dist/web-component.mjs"
-    },
-    "./shiny": {
-      "types": "./dist/shiny.d.ts",
-      "browser": "./dist/shiny.mjs",
-      "import": "./dist/shiny.mjs"
-    },
-    "./shiny-web-component": {
-      "types": "./dist/shiny-web-component.d.ts",
-      "browser": "./dist/shiny-web-component.mjs",
-      "import": "./dist/shiny-web-component.mjs"
-    },
-    "./types": {
-      "types": "./dist/types.d.ts",
-      "browser": "./dist/types.mjs",
-      "import": "./dist/types.mjs"
-    },
-    "./core": {
-      "types": "./dist/core.d.ts",
-      "browser": "./dist/core.mjs",
-      "import": "./dist/core.mjs"
-    },
-    "./features/face/*": "./dist/features/face/*.svg",
-    "./features/bottom/*": "./dist/features/bottom/*/*.svg",
-    "./features/sides/*": "./dist/features/sides/*/*.svg",
-    "./features/top/*": "./dist/features/top/*/*.svg"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "unbuild",
-    "dev": "pnpm optimize-svg && vite build --watch & pnpm --filter=./playground run dev",
-    "dev:pkg": "vite build --watch",
-    "dev:playground": "pnpm --filter=./playground run dev",
-    "optimize-svg": "esno ./scripts/optimize-features.ts",
-    "lint": "eslint .",
+    "build": "nr -r build",
+    "dev": "nr -r dev",
+    "lint": "eslint --cache .",
     "lint:fix": "eslint . --fix",
-    "prepublishOnly": "nr lint && nr typecheck && nr build",
-    "release": "bumpp && npm publish",
-    "start": "esno src/index.ts",
+    "prepublishOnly": "nr build",
+    "docs": "pnpm -C docs run docs:dev",
+    "docs:build": "pnpm -C docs run docs:build",
+    "release": "bumpp -r && pnpm -r publish",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepare": "simple-git-hooks",
-    "postinstall": "nr prepare && nr typecheck"
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@nimiq/utils": "catalog:"
@@ -86,21 +37,14 @@
     "@antfu/ni": "catalog:",
     "@antfu/utils": "catalog:",
     "@types/node": "catalog:",
-    "buffer": "catalog:",
     "bumpp": "catalog:",
-    "consola": "catalog:",
     "eslint": "catalog:",
-    "esno": "catalog:",
     "lint-staged": "catalog:",
     "pathe": "catalog:",
     "pnpm": "catalog:",
     "simple-git-hooks": "catalog:",
-    "svgo": "catalog:",
-    "tiny-glob": "catalog:",
     "typescript": "catalog:",
-    "unbuild": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-dts": "catalog:",
     "vitest": "catalog:"
   },
   "simple-git-hooks": {

@@ -4,6 +4,9 @@
     "lib": ["ESNext", "DOM"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "paths": {
+      "nimiq-identicons": ["./packages/nimiq-identicons/src"]
+    },
     "resolveJsonModule": true,
     "types": ["vite/client", "node"],
     "strict": true,

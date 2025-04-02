@@ -8,8 +8,8 @@ The library is heavily optimized for performance.
 [See the Identicons in action here.](https://nimiq.github.io/identicons/)
 
 - [Installation](#installation)
-    - [Browsers](#browsers)
-    - [NodeJS](#nodejs)
+  - [Browsers](#browsers)
+  - [NodeJS](#nodejs)
 - [Usage](#usage)
 - [Demos](#demos)
 

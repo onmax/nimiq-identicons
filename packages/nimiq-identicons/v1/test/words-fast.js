@@ -68,7 +68,7 @@ function newAddress() {
   return res
 }
 
-function *iterString(count) {
+function* iterString(count) {
   for (let i = 0; i < count; i++)
     yield newAddress()
 }

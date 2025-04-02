@@ -1,0 +1,85 @@
+{
+  "name": "identicons-esm",
+  "type": "module",
+  "version": "1.0.0-beta.2",
+  "packageManager": "pnpm@10.7.1",
+  "description": "A rewrite of the Identicon module with ESM",
+  "license": "MIT",
+  "homepage": "https://github.com/onmax/nimiq-identicons#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onmax/nimiq-identicons.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onmax/nimiq-identicons/issues"
+  },
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/index.mjs",
+      "import": "./dist/index.mjs"
+    },
+    "./web-component": {
+      "types": "./dist/web-component.d.ts",
+      "browser": "./dist/web-component.mjs",
+      "import": "./dist/web-component.mjs"
+    },
+    "./shiny": {
+      "types": "./dist/shiny.d.ts",
+      "browser": "./dist/shiny.mjs",
+      "import": "./dist/shiny.mjs"
+    },
+    "./shiny-web-component": {
+      "types": "./dist/shiny-web-component.d.ts",
+      "browser": "./dist/shiny-web-component.mjs",
+      "import": "./dist/shiny-web-component.mjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "browser": "./dist/types.mjs",
+      "import": "./dist/types.mjs"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "browser": "./dist/core.mjs",
+      "import": "./dist/core.mjs"
+    },
+    "./features/face/*": "./dist/features/face/*.svg",
+    "./features/bottom/*": "./dist/features/bottom/*/*.svg",
+    "./features/sides/*": "./dist/features/sides/*/*.svg",
+    "./features/top/*": "./dist/features/top/*/*.svg"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && cp -r src/features/optimized dist/features",
+    "dev": "pnpm optimize-svg && vite build --watch",
+    "optimize-svg": "esno ./scripts/optimize-features.ts"
+  },
+  "dependencies": {
+    "@nimiq/utils": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "bumpp": "catalog:",
+    "esno": "catalog:",
+    "pathe": "catalog:",
+    "pnpm": "catalog:",
+    "svgo": "catalog:",
+    "tiny-glob": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-dts": "catalog:"
+  }
+}
