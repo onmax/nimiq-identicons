@@ -1,7 +1,7 @@
 {
   "name": "identicons-esm",
   "type": "module",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "packageManager": "pnpm@10.7.1",
   "description": "A rewrite of the Identicon module with ESM",
   "license": "MIT",
