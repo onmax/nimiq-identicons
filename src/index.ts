@@ -1,5 +1,5 @@
 import type { CreateIdenticonOptions, IdenticonParams } from './types'
-import { defaultCircleShape, defaultShadow, getIdenticonsParams, validateInput } from './core'
+import { defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams, validateInput } from './core'
 
 export const defaultBackgroundShape = `<path d="m126.074 16.999 31.955 55.003a15.92 15.92 0 0 1 2.159 7.999 15.93 15.93 0 0 1-2.159 7.998l-31.955 55.003c-2.867 4.949-8.183 7.998-13.933 7.998H48.225c-5.75 0-11.066-3.049-13.933-7.998L2.337 87.999a15.96 15.96 0 0 1 0-15.997l31.96-55.003a16.048 16.048 0 0 1 5.89-5.854A16.173 16.173 0 0 1 48.23 9h63.91c5.75 0 11.066 3.05 13.933 7.999Z"/>`
 
@@ -44,5 +44,6 @@ export function createIdenticon(rawInput: string, options: CreateIdenticonOption
     return identiconPlaceholder
   const params = getIdenticonsParams(input)
   const svg = assembleSvg(params)
-  return svg
+  const formatted = formatIdenticon(svg, options.format)
+  return formatted
 }

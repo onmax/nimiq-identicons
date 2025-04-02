@@ -1,4 +1,4 @@
-import type { Colors, ColorType, CreateIdenticonOptions, IdenticonParams, Section, Sections } from './types'
+import type { Colors, ColorType, CreateIdenticonOptions, IdenticonFormat, IdenticonParams, Section, Sections } from './types'
 import { ValidationUtils } from '@nimiq/utils'
 
 export const defaultShadow = '<path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>'
@@ -23,20 +23,6 @@ export function getIdenticonsParams(input: string): IdenticonParams {
   const colors = colorsToRgb({ accent, background, main })
 
   return { sections, colors }
-}
-
-/**
- * Formats the SVG string into the requested output format
- * @param svg - The SVG string to format
- * @returns Promise containing the formatted identicon string
- */
-export async function formatIdenticonToBase64(svg: string): Promise<string> {
-  const base64String = typeof window !== 'undefined'
-    ? btoa(svg)
-  // eslint-disable-next-line unicorn/prefer-node-protocol
-    : (await import('buffer')).Buffer.from(svg).toString('base64')
-
-  return `data:image/svg+xml;base64,${base64String}`
 }
 
 export const colors = ['#FC8702', '#D94432', '#E9B213', '#1A5493', '#0582CA', '#5961A8', '#21BCA5', '#FA7268', '#88B04B', '#795548'] as const
@@ -124,4 +110,15 @@ export function validateInput(input: string, options: CreateIdenticonOptions = {
 
   const formattedInput = input.replace(/[+ ]/g, '').toUpperCase().match(/.{4}/g)!.join(' ').trim()
   return formattedInput
+}
+
+export function formatIdenticon(svg: string, format: IdenticonFormat = 'image/svg+xml'): string {
+  if (format === 'svg')
+    return svg
+  // eslint-disable-next-line node/prefer-global/buffer
+  if (globalThis.Buffer) {
+    // eslint-disable-next-line node/prefer-global/buffer
+    return Buffer.from(svg).toString('base64')
+  }
+  return globalThis.btoa(`data:image/svg+xml;base64,${svg}`)
 }

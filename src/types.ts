@@ -14,6 +14,13 @@ export interface CreateIdenticonOptions {
    * @default true
    */
   shouldValidateAddress?: boolean
+
+  /**
+   * The format of the identicon. Can be 'svg' or 'image/svg+xml'.
+   *
+   * @default 'image/svg+xml'
+   */
+  format?: IdenticonFormat
 }
 
 export type IdenticonMaterial = 'bronze' | 'silver' | 'gold'

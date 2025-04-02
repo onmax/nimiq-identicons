@@ -28,10 +28,9 @@ const svg = createIdenticon(input, { shouldValidateAddress: false }) // shouldVa
 
 ```ts
 import { createIdenticon } from 'identicons-esm'
-import { formatIdenticonToBase64 } from 'identicons-esm/core'
 
 const input = 'Your input here'
-const imgSrc = await formatIdenticonToBase64(createIdenticon(input, { shouldValidateAddress: false }))
+const imgSrc = await createIdenticon(input, { shouldValidateAddress: false, format: 'image/svg+xml' })
 ```
 
 ```html
