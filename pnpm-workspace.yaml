@@ -1,7 +1,7 @@
 packages:
   - playground
   - docs
-  - packages/*
+  - packages/nimiq-identicons/
   - examples/*
 catalog:
   '@antfu/eslint-config': ^4.11.0

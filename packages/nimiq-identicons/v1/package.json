@@ -1,12 +1,12 @@
 {
-  "name": "@nimiq/identicons",
-  "version": "1.0.0-beta.3",
+  "name": "nimiq-v1",
+  "private": true,
+  "version": "1.0.0-beta.4",
   "description": "Nimiq Identicons",
   "author": "",
   "license": "ISC",
   "main": "dist/identicons.bundle.cjs.js",
   "module": "dist/identicons.bundle.min.js",
-  "private": true,
   "browser": "dist/identicons.min.js",
   "files": [
     "dist"
