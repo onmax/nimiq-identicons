@@ -19,38 +19,38 @@
     ".": {
       "types": "./dist/index.d.ts",
       "browser": "./dist/index.mjs",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.mjs"
     },
     "./web-component": {
       "types": "./dist/web-component.d.ts",
       "browser": "./dist/web-component.mjs",
-      "import": "./dist/web-component.mjs",
-      "require": "./dist/web-component.cjs"
+      "import": "./dist/web-component.mjs"
     },
     "./shiny": {
       "types": "./dist/shiny.d.ts",
       "browser": "./dist/shiny.mjs",
-      "import": "./dist/shiny.mjs",
-      "require": "./dist/shiny.cjs"
+      "import": "./dist/shiny.mjs"
     },
     "./shiny-web-component": {
       "types": "./dist/shiny-web-component.d.ts",
       "browser": "./dist/shiny-web-component.mjs",
-      "import": "./dist/shiny-web-component.mjs",
-      "require": "./dist/shiny-web-component.cjs"
+      "import": "./dist/shiny-web-component.mjs"
     },
     "./types": {
       "types": "./dist/types.d.ts",
       "browser": "./dist/types.mjs",
-      "import": "./dist/types.mjs",
-      "require": "./dist/types.cjs"
+      "import": "./dist/types.mjs"
     },
     "./core": {
       "types": "./dist/core.d.ts",
       "browser": "./dist/core.mjs",
-      "import": "./dist/core.mjs",
-      "require": "./dist/core.cjs"
+      "import": "./dist/core.mjs"
+    },
+    "./features": {
+      "./face/*": "./dist/features/face/*.svg",
+      "./bottom/*": "./dist/features/bottom/*/*.svg",
+      "./sides/*": "./dist/features/sides/*/*.svg",
+      "./top/*": "./dist/features/top/*/*.svg"
     }
   },
   "typesVersions": {
@@ -65,7 +65,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build && cp -r src/features/optimized dist/features",
+    "build": "unbuild",
     "dev": "pnpm optimize-svg && vite build --watch & pnpm --filter=./playground run dev",
     "dev:pkg": "vite build --watch",
     "dev:playground": "pnpm --filter=./playground run dev",
@@ -100,6 +100,7 @@
     "svgo": "catalog:",
     "tiny-glob": "catalog:",
     "typescript": "catalog:",
+    "unbuild": "catalog:",
     "vite": "catalog:",
     "vite-plugin-dts": "catalog:",
     "vitest": "catalog:"

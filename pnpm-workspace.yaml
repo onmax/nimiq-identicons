@@ -21,6 +21,7 @@ catalog:
   svgo: ^3.3.2
   tiny-glob: ^0.2.9
   typescript: ^5.8.2
+  unbuild: ^3.5.0
   vite: ^6.1.3
   vite-plugin-dts: ^4.5.3
   vitest: ^3.1.1
