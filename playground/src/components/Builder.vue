@@ -68,7 +68,7 @@ onMounted(async () => {
 
 function getSvg(svgContent: string) {
   const { accent, main } = initialParams.value?.colors || { accent: '#000', main: '#fff' }
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><g fill="${accent}" clip-path="url(#a)" color="${main}">${svgContent}</g></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 160 160"><g fill="${accent}" clip-path="url(#a)" color="${main}">${svgContent}</g></svg>`
 }
 
 function isSelected(svg: string) {
@@ -142,7 +142,7 @@ watch(showShiny, () => {
 </script>
 
 <template>
-  <div>
+  <div w-full>
     <div mx-auto size-156 v-html="identicon" />
     <form f-mt-md @submit.prevent="">
       <div flex="~ gap-16 items-center justify-end">
@@ -156,34 +156,28 @@ watch(showShiny, () => {
         </button>
       </div>
       <PillSelector v-model="activeSection" :options mx-auto f-mt-xs />
-      <ul flex="~ gap-x-32 gap-y-64 items-center wrap" scale-85>
+      <ul w-full flex="~ gap-16 wrap" mx-auto f-mt-md>
         <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>
-          <button group bg-transparent @click="select(svg)">
-            <div v-html="getSvg(svg)" />
-            <span rounded-2 bg-neutral-300 px-8 py-3 font-mono op-0 f-text-lg group-hocus:op-100>{{ path.split('/').slice(3).join('/') }}</span>
+          <button group rounded-6 nq-hoverable f-p-xs @click="select(svg)">
+            <div size-96 v-html="getSvg(svg)" />
+            <span rounded-2 bg-neutral-300 px-8 py-3 font-mono f-text-2xs op="0 group-hocus:100">{{ path.split('/').slice(3).join('/') }}</span>
           </button>
         </li>
       </ul>
-      <div v-if="activeSection === 'colors'" w-full f-mt-md>
-        <label flex="~ items-center gap-8">
+      <div v-if="activeSection === 'colors'" w-max f-mt-md mx-auto>
+        <label flex="~ items-center gap-16">
           <span mr-auto text-10 nq-label>Main color</span>
-          <div v-for="color in identiconColors" :key="color">
-            <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeMain = color" />
-          </div>
+          <button v-for="color in identiconColors" :key="color" :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeMain = color" />
         </label>
 
-        <label flex="~ items-center gap-8" f-mt-md>
+        <label flex="~ items-center gap-16" f-mt-md>
           <span mr-auto text-10 nq-label>Background color</span>
-          <div v-for="color in identiconColors" :key="color">
-            <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
-          </div>
+          <button v-for="color in identiconColors" :key="color" :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeBackground = color" />
         </label>
 
-        <label flex="~ items-center gap-8" f-mt-md>
+        <label flex="~ items-center gap-16" f-mt-md>
           <span mr-auto text-10 nq-label>Accent color</span>
-          <div v-for="color in identiconColors" :key="color">
-            <button :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
-          </div>
+          <button v-for="color in identiconColors" :key="color" :style="`background: ${color}`" size-20 cursor-pointer rounded-full @click="activeAccent = color" />
         </label>
       </div>
       <MaterialSelector v-if="activeSection === 'material'" v-model="activeMaterial" f-mt-xs />
