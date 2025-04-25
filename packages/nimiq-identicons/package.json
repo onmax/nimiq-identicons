@@ -64,7 +64,7 @@
   ],
   "scripts": {
     "build": "vite build && cp -r src/features/optimized dist/features",
-    "dev": "pnpm optimize-svg && vite build --watch",
+    "dev": "vite build --watch",
     "optimize-svg": "esno ./scripts/optimize-features.ts"
   },
   "dependencies": {
