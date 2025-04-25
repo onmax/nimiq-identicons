@@ -22,6 +22,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'identicons-esm': fileURLToPath(new URL('../packages/nimiq-identicons/src', import.meta.url)),
     },
   },
 })

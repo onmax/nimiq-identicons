@@ -18,7 +18,9 @@
   "sideEffects": false,
   "scripts": {
     "build": "nr -r build",
-    "dev": "nr -r dev",
+    "dev": "nr optimize-svg && nr play",
+    "optimize-svg": "pnpm -C packages/nimiq-identicons run optimize-svg",
+    "play": "pnpm -r -C playground run dev",
     "lint": "eslint --cache .",
     "lint:fix": "eslint . --fix",
     "prepublishOnly": "nr build",

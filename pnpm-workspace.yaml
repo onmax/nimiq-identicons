@@ -2,25 +2,46 @@ packages:
   - playground
   - packages/nimiq-identicons/
   - examples/*
+
 catalog:
   '@antfu/eslint-config': ^4.12.0
   '@antfu/ni': ^24.3.0
   '@antfu/utils': ^9.2.0
+  '@iconify-json/nimiq': https://pkg.pr.new/onmax/nimiq-ui/nimiq-icons@814b6a1
+  '@iconify/utils': ^2.3.0
+  '@nimiq/identicons': ^1.6.2
   '@nimiq/utils': ^0.12.3
+  '@tsconfig/node20': ^20.1.4
   '@types/node': ^22.15.2
+  '@unocss/reset': ^65.4.3
+  '@vitejs/plugin-vue': ^5.2.1
+  '@vue/eslint-config-typescript': ^14.4.0
+  '@vue/tsconfig': ^0.7.0
+  '@vueuse/core': ^12.5.0
   bumpp: ^10.1.0
   eslint: ^9.25.1
+  eslint-plugin-vue: ^9.32.0
   esno: ^4.8.0
   lint-staged: ^15.5.1
+  nimiq-css: ^0.3.0
+  npm-run-all2: ^7.0.2
   pathe: ^2.0.3
   pnpm: ^10.9.0
+  radix-vue: ^1.9.14
   simple-git-hooks: ^2.13.0
   svgo: ^3.3.2
   tiny-glob: ^0.2.9
   typescript: ^5.8.3
+  unocss: ^65.4.3
+  unocss-preset-onmax: 1.0.0-beta.16
+  unocss-preset-scale-px: ^0.0.1
   vite: ^6.3.3
   vite-plugin-dts: ^4.5.3
+  vite-plugin-vue-devtools: ^7.7.2
   vitest: ^3.1.2
+  vue: ^3.5.13
+  vue-tsc: ^2.2.0
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
+  - vue-demi
