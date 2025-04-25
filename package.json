@@ -22,8 +22,6 @@
     "lint": "eslint --cache .",
     "lint:fix": "eslint . --fix",
     "prepublishOnly": "nr build",
-    "docs": "pnpm -C docs run docs:dev",
-    "docs:build": "pnpm -C docs run docs:build",
     "release": "bumpp -r && pnpm -r publish",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
