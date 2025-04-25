@@ -1,20 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ESNext", "DOM"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "paths": {
-      "nimiq-identicons": ["./packages/nimiq-identicons/src"]
-    },
+    "composite": true,
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "moduleDetection": "force",
+    "module": "NodeNext",
     "resolveJsonModule": true,
-    "types": ["vite/client", "node"],
+    "allowJs": true,
     "strict": true,
-    "strictNullChecks": true,
-    "noEmit": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "sourceMap": true,
     "esModuleInterop": true,
-    "skipDefaultLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "skipLibCheck": true
+
   },
   "exclude": ["playground"]
 }

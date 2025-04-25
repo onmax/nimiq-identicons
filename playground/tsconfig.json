@@ -1,11 +1,21 @@
 {
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+  "compilerOptions": {
+    "composite": true,
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "moduleDetection": "force",
+    "module": "NodeNext",
+    "paths": {
+      "identicons-esm": ["../packages/identicons-esm"]
     },
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ],
-  "files": []
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
+  }
 }
