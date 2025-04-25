@@ -4,24 +4,24 @@ packages:
   - packages/nimiq-identicons/
   - examples/*
 catalog:
-  '@antfu/eslint-config': ^4.11.0
+  '@antfu/eslint-config': ^4.12.0
   '@antfu/ni': ^24.3.0
-  '@antfu/utils': ^9.1.0
+  '@antfu/utils': ^9.2.0
   '@nimiq/utils': ^0.12.3
-  '@types/node': ^22.13.17
+  '@types/node': ^22.15.2
   bumpp: ^10.1.0
-  eslint: ^9.23.0
+  eslint: ^9.25.1
   esno: ^4.8.0
-  lint-staged: ^15.5.0
+  lint-staged: ^15.5.1
   pathe: ^2.0.3
-  pnpm: ^10.7.1
-  simple-git-hooks: ^2.12.1
+  pnpm: ^10.9.0
+  simple-git-hooks: ^2.13.0
   svgo: ^3.3.2
   tiny-glob: ^0.2.9
-  typescript: ^5.8.2
-  vite: ^6.1.0
+  typescript: ^5.8.3
+  vite: ^6.3.3
   vite-plugin-dts: ^4.5.3
-  vitest: ^3.1.1
+  vitest: ^3.1.2
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
