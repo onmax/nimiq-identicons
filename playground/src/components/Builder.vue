@@ -157,10 +157,10 @@ watch(showShiny, () => {
       </div>
       <PillSelector v-model="activeSection" :options mx-auto f-mt-xs />
       <ul w-full flex="~ gap-16 wrap" mx-auto f-mt-md>
-        <li v-for="({ path, svg }) in activeFeatures" :key="path" :class="{ 'bg-neutral-500': isSelected(svg) }" rounded-8>
-          <button group rounded-6 nq-hoverable f-p-xs @click="select(svg)">
-            <div size-96 v-html="getSvg(svg)" />
-            <span rounded-2 bg-neutral-300 px-8 py-3 font-mono f-text-2xs op="0 group-hocus:100">{{ path.split('/').slice(3).join('/') }}</span>
+        <li v-for="({ path, svg }) in activeFeatures" :key="path" rounded-8 :data-state="isSelected(svg) ? 'active' : 'inactive'">
+          <button group rounded-6 nq-hoverable f-p-xs data-active:outline="3 blue ~" @click="select(svg)">
+            <div size-82 v-html="getSvg(svg)" />
+            <span rounded-2 px-8 py-3 font-mono f-text-2xs op="0 group-hocus:100 data-active:100">{{ path.split('/').slice(4).join('/') }}</span>
           </button>
         </li>
       </ul>
