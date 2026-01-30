@@ -24,7 +24,7 @@
     "lint": "eslint --cache .",
     "lint:fix": "eslint . --fix",
     "prepublishOnly": "nr build",
-    "release": "bumpp -r && pnpm -r publish",
+    "release": "bumpp -r --push --no-push-all",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "prepare": "simple-git-hooks"

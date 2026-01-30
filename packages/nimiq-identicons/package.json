@@ -6,65 +6,22 @@
   "description": "A rewrite of the Identicon module with ESM",
   "license": "MIT",
   "homepage": "https://github.com/onmax/nimiq-identicons#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/onmax/nimiq-identicons.git"
-  },
-  "bugs": {
-    "url": "https://github.com/onmax/nimiq-identicons/issues"
-  },
+  "repository": { "type": "git", "url": "git+https://github.com/onmax/nimiq-identicons.git" },
+  "bugs": { "url": "https://github.com/onmax/nimiq-identicons/issues" },
   "keywords": [],
   "sideEffects": false,
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "browser": "./dist/index.mjs",
-      "import": "./dist/index.mjs"
-    },
-    "./web-component": {
-      "types": "./dist/web-component.d.ts",
-      "browser": "./dist/web-component.mjs",
-      "import": "./dist/web-component.mjs"
-    },
-    "./shiny": {
-      "types": "./dist/shiny.d.ts",
-      "browser": "./dist/shiny.mjs",
-      "import": "./dist/shiny.mjs"
-    },
-    "./shiny-web-component": {
-      "types": "./dist/shiny-web-component.d.ts",
-      "browser": "./dist/shiny-web-component.mjs",
-      "import": "./dist/shiny-web-component.mjs"
-    },
-    "./types": {
-      "types": "./dist/types.d.ts",
-      "browser": "./dist/types.mjs",
-      "import": "./dist/types.mjs"
-    },
-    "./core": {
-      "types": "./dist/core.d.ts",
-      "browser": "./dist/core.mjs",
-      "import": "./dist/core.mjs"
-    },
-    "./features/face/*": "./dist/features/face/*.svg",
-    "./features/bottom/*": "./dist/features/bottom/*/*.svg",
-    "./features/sides/*": "./dist/features/sides/*/*.svg",
-    "./features/top/*": "./dist/features/top/*/*.svg"
+    ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" },
+    "./web-component": { "types": "./dist/web-component.d.mts", "import": "./dist/web-component.mjs" },
+    "./shiny": { "types": "./dist/shiny.d.mts", "import": "./dist/shiny.mjs" },
+    "./shiny-web-component": { "types": "./dist/shiny-web-component.d.mts", "import": "./dist/shiny-web-component.mjs" },
+    "./types": { "types": "./dist/types.d.mts", "import": "./dist/types.mjs" },
+    "./core": { "types": "./dist/core.d.mts", "import": "./dist/core.mjs" }
   },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
-    "build": "vite build && cp -r src/features/optimized dist/features",
-    "dev": "vite build --watch",
+    "build": "esno scripts/generate-features.ts && tsdown",
+    "dev": "esno scripts/generate-features.ts && tsdown --watch",
     "optimize-svg": "esno ./scripts/optimize-features.ts"
   },
   "dependencies": {
@@ -78,8 +35,8 @@
     "pnpm": "catalog:",
     "svgo": "catalog:",
     "tiny-glob": "catalog:",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-plugin-dts": "catalog:"
-  }
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
+  },
+  "publishConfig": { "access": "public" }
 }

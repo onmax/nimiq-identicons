@@ -21,7 +21,7 @@ export class IdenticonElement extends HTMLElement {
     this.shadow.appendChild(content)
   }
 
-  async attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): Promise<void> {
+  attributeChangedCallback(name: string, _oldValue: string, newValue: string | null): void {
     if (name === 'input')
       this.currentInput = newValue || ''
     if (name === 'should-validate-address')

@@ -27,7 +27,7 @@ export function assembleShinySvg({ colors: { accent, background, main }, section
  * Generate a shiny identicon from a string
  *
  * @param rawInput The string to generate the identicon from
- * @param options The options for the identicon:w
+ * @param options The options for the identicon
  *
  * @returns The identicon as a string
  */
