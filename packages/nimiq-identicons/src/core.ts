@@ -11,13 +11,13 @@ export const defaultCircleShape = (color: string): string => `<circle cx="80" cy
  */
 export function getIdenticonsParams(input: string): IdenticonParams {
   const hash = makeHash(input)
-  const main = Number(hash[0])
-  const background = Number(hash[2])
-  const accent = Number(hash[11])
-  const face = Number(hash[3] + hash[4])
-  const top = Number(hash[5] + hash[6])
-  const sides = Number(hash[7] + hash[8])
-  const bottom = Number(hash[9] + hash[10])
+  const main = Number(hash.charAt(0))
+  const background = Number(hash.charAt(2))
+  const accent = Number(hash.charAt(11))
+  const face = Number(hash.charAt(3) + hash.charAt(4))
+  const top = Number(hash.charAt(5) + hash.charAt(6))
+  const sides = Number(hash.charAt(7) + hash.charAt(8))
+  const bottom = Number(hash.charAt(9) + hash.charAt(10))
 
   const sections = sectionsToSvg({ face, top, sides, bottom })
   const colors = colorsToRgb({ accent, background, main })
@@ -36,9 +36,9 @@ export function colorsToRgb({ main, background, accent }: Record<ColorType, numb
   while (accent === main || accent === background) accent = adjustIndex(accent)
 
   return {
-    main: colors[main],
-    background: backgroundColors[background],
-    accent: colors[accent],
+    main: colors[main]!,
+    background: backgroundColors[background]!,
+    accent: colors[accent]!,
   }
 }
 
@@ -50,8 +50,9 @@ export function makeHash(input: string): string {
     .split('')
     .reduce((a, e) => e + a, '')
 
+  const padChar = fullHash.charAt(5) || '0'
   const hash = fullHash
-    .replace('.', fullHash[5]) // Replace the dot as it cannot be parsed to int
+    .replace('.', padChar) // Replace the dot as it cannot be parsed to int
     .slice(4, 21) // Changed from (4, 17) to (4, 21) to match V1 behavior
 
   // The index 5 of `fullHash` is currently unused (index 1 of `hash`,
@@ -61,7 +62,7 @@ export function makeHash(input: string): string {
   // leading to an invalid bottom index and feature color. Adding
   // padding creates a bottom feature and accent color where no
   // existed previously, thus it's not a disrupting change.
-  return hash.padEnd(13, fullHash[5])
+  return hash.padEnd(13, padChar)
 }
 
 function chaosHash(number: number): number {
@@ -72,12 +73,7 @@ function chaosHash(number: number): number {
   return a_n
 }
 
-export const identiconFeatures: Record<string, string> = {
-  ...import.meta.glob('./features/optimized/bottom/*.svg', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('./features/optimized/top/*.svg', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('./features/optimized/face/*.svg', { eager: true, query: '?raw', import: 'default' }),
-  ...import.meta.glob('./features/optimized/sides/*.svg', { eager: true, query: '?raw', import: 'default' }),
-}
+export { identiconFeatures } from './generated/features'
 
 export function sectionToSvg(section: Section, index: number): string {
   // Ensure index is between 1 and 21
@@ -108,8 +104,10 @@ export function validateInput(input: string, options: CreateIdenticonOptions = {
     return
   }
 
-  const formattedInput = input.replace(/[+ ]/g, '').toUpperCase().match(/.{4}/g)!.join(' ').trim()
-  return formattedInput
+  const chunks = input.replace(/[+ ]/g, '').toUpperCase().match(/.{4}/g)
+  if (!chunks)
+    return
+  return chunks.join(' ').trim()
 }
 
 export function formatIdenticon(svg: string, format: IdenticonFormat = 'image/svg+xml'): string {

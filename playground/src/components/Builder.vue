@@ -13,7 +13,7 @@ const initialParams = ref<{ sections: Sections, colors: Colors }>()
 
 interface Svg { path: string, svg: string }
 
-const entries = Object.entries(identiconFeatures)
+const entries = Object.entries(identiconFeatures) as [string, string][]
 const bottom = ref<Svg[]>(entries.filter(([path]) => path.includes('bottom')).map(([path, svg]) => ({ path, svg })))
 const top = ref<Svg[]>(entries.filter(([path]) => path.includes('top')).map(([path, svg]) => ({ path, svg })))
 const face = ref<Svg[]>(entries.filter(([path]) => path.includes('face')).map(([path, svg]) => ({ path, svg })))

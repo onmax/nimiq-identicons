@@ -12,7 +12,6 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "@nimiq/identicons": "catalog:",
     "@vueuse/core": "catalog:",
     "radix-vue": "catalog:",
     "vue": "catalog:"

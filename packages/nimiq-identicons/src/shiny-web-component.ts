@@ -42,7 +42,7 @@ export class ShinyIdenticonElement extends HTMLElement {
 
     try {
       const identicon = createShinyIdenticon(input, {
-        material: this.currentMaterial!,
+        material: this.currentMaterial ?? 'bronze',
         shouldValidateAddress: this.currentShouldValidate,
       })
       this.shadow.lastElementChild!.innerHTML = identicon

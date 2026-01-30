@@ -5,6 +5,8 @@ import { join } from 'pathe'
 import { optimize } from 'svgo'
 import tinyglob from 'tiny-glob'
 
+interface XastElement { type: 'element', name: string, attributes: Record<string, string>, children: unknown[] }
+
 async function optimizeSvgFile(inputPath: string, outputPath: string) {
   try {
     const data = await readFile(inputPath, 'utf8')
@@ -26,7 +28,7 @@ const greenToCurrentColorPlugin = {
   fn: () => {
     return {
       element: {
-        enter: (node: any) => {
+        enter: (node: XastElement) => {
           if (node.attributes.fill === '#0f0' || node.attributes.fill === '#00ff00')
             node.attributes.fill = 'currentColor'
 

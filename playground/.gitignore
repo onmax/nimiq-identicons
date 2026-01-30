@@ -28,3 +28,16 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Generated JS/DTS from Vue/TS files
+*.vue.js
+*.vue.d.ts
+src/**/*.js
+src/**/*.d.ts
+uno.config.js
+uno.config.d.ts
+vite.config.js
+vite.config.d.ts
+
+# Build assets
+public/assets/
