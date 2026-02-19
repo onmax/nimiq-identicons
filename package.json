@@ -1,7 +1,7 @@
 {
   "name": "identicons-esm-monorepo",
   "type": "module",
-  "version": "1.0.0-beta.5",
+  "version": "0.3.0",
   "private": true,
   "packageManager": "pnpm@10.9.0",
   "description": "A rewrite of the Identicon module with ESM",
