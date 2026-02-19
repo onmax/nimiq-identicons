@@ -202,6 +202,9 @@ importers:
       '@vueuse/core':
         specifier: 'catalog:'
         version: 12.8.2(typescript@5.8.3)
+      identicons-esm:
+        specifier: workspace:*
+        version: link:../packages/nimiq-identicons
       radix-vue:
         specifier: 'catalog:'
         version: 1.9.17(vue@3.5.13(typescript@5.8.3))

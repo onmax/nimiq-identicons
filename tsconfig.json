@@ -20,5 +20,5 @@
     "skipLibCheck": true
 
   },
-  "exclude": ["playground"]
+  "exclude": ["playground", "eslint.config.js"]
 }

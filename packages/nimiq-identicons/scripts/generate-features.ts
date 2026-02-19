@@ -1,9 +1,10 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, relative } from 'node:path'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import glob from 'tiny-glob'
 
-const srcDir = new URL('../src', import.meta.url).pathname
+const srcDir = fileURLToPath(new URL('../src', import.meta.url))
 const featuresDir = `${srcDir}/features/optimized`
 const outputFile = `${srcDir}/generated/features.ts`
 

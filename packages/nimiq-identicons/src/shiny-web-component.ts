@@ -1,6 +1,6 @@
-import type { IdenticonMaterial } from './types'
-import { identiconPlaceholder } from '.'
-import { createShinyIdenticon } from './shiny'
+import type { IdenticonMaterial } from './types.js'
+import { identiconPlaceholder } from './index.js'
+import { createShinyIdenticon } from './shiny.js'
 
 const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; }</style>`
 const placeholder = identiconPlaceholder

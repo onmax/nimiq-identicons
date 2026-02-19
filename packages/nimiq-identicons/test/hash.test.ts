@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { makeHash } from '../src/core'
+import { makeHash } from '../src/core.js'
 
 describe('hash implementation', () => {
   it('should produce consistent hashes', () => {

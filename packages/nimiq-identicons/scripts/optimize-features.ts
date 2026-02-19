@@ -64,7 +64,7 @@ async function processFiles() {
 
   // replace original with optimized
   const outputPaths = inputPaths.map(path => path.replace('original', 'optimized'))
-  const zippedPaths = inputPaths.map((path, index) => [join(cwd(), path), join(cwd(), outputPaths[index])])
+  const zippedPaths = inputPaths.map((path, index) => [join(cwd(), path), join(cwd(), outputPaths[index]!)] as [string, string])
   return Promise.all(zippedPaths.map(([inputPath, outputPath]) => optimizeSvgFile(inputPath, outputPath)))
 }
 

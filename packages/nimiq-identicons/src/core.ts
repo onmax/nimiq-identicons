@@ -1,5 +1,7 @@
-import type { Colors, ColorType, CreateIdenticonOptions, IdenticonFormat, IdenticonParams, Section, Sections } from './types'
+import type { Colors, ColorType, CreateIdenticonOptions, IdenticonFormat, IdenticonParams, Section, Sections } from './types.js'
 import { ValidationUtils } from '@nimiq/utils/validation-utils'
+
+import { identiconFeatures } from './generated/features.js'
 
 export const defaultShadow = '<path fill="#010101" d="M119.21 80a39.46 39.46 0 0 1-67.13 28.13c10.36 2.33 36 3 49.82-14.28 10.39-12.47 8.31-33.23 4.16-43.26A39.35 39.35 0 0 1 119.21 80" opacity=".1"/>'
 export const defaultCircleShape = (color: string): string => `<circle cx="80" cy="80" r="40" fill="${color}"/>`
@@ -72,8 +74,7 @@ function chaosHash(number: number): number {
     a_n = (1 - a_n) * a_n * k
   return a_n
 }
-
-export { identiconFeatures } from './generated/features'
+export { identiconFeatures }
 
 export function sectionToSvg(section: Section, index: number): string {
   // Ensure index is between 1 and 21

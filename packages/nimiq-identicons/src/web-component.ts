@@ -1,4 +1,4 @@
-import { createIdenticon, identiconPlaceholder } from '.'
+import { createIdenticon, identiconPlaceholder } from './index.js'
 
 const hostStyles = `<style>:host { display: block; width: 160px; height: 160px; }</style>`
 const placeholder = identiconPlaceholder

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@vueuse/core": "catalog:",
+    "identicons-esm": "workspace:*",
     "radix-vue": "catalog:",
     "vue": "catalog:"
   },
