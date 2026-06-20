@@ -22,29 +22,37 @@ the **relative** behavior is what matters. WebKit has no `longtask` API, so use
 
 | count | mode    | gen(ms) | thr(/s) | longTasks(ms) | worstFrameGap(ms) |
 | ----: | ------- | ------: | ------: | ------------: | ----------------: |
-| 10000 | sync    |    50.4 | 198,413 |        1 (55) |            **46** |
-| 10000 | batched |    54.1 | 184,843 |         0 (0) |               9.5 |
-| 10000 | worker  |   112.9 |  88,574 |         0 (0) |              15.9 |
-| 50000 | sync    |   219.5 | 227,790 |       1 (225) |         **211.7** |
-| 50000 | batched |   221.2 | 226,040 |         0 (0) |              92.6 |
-| 50000 | worker  |   636.5 |  78,555 |       2 (161) |               140 |
+| 10000 | sync    |    47.4 | 210,970 |        1 (52) |          **45.4** |
+| 10000 | batched |    50.3 | 198,807 |         0 (0) |               9.0 |
+| 10000 | worker  |    78.5 | 127,389 |         0 (0) |               8.9 |
+| 10000 | cached  |    41.9 | 238,663 |         0 (0) |              30.4 |
+| 50000 | sync    |   215.2 | 232,342 |       1 (221) |         **211.2** |
+| 50000 | batched |   210.4 | 237,643 |         0 (0) |              90.9 |
+| 50000 | worker  |   897.4 |  55,717 |       3 (389) |             291.2 |
+| 50000 | cached  |   422.3 | 118,399 |       1 (428) |         **408.9** |
 
 ### WebKit (Safari engine)
 
 | count | mode    | gen(ms) | thr(/s) | longTasks(ms) | worstFrameGap(ms) |
 | ----: | ------- | ------: | ------: | ------------: | ----------------: |
-| 10000 | sync    |      31 | 322,581 |       0 (n/a) |            **34** |
-| 10000 | batched |      67 | 149,254 |       0 (n/a) |                18 |
-| 10000 | worker  |      45 | 222,222 |       0 (n/a) |                18 |
-| 50000 | sync    |     164 | 304,878 |       0 (n/a) |           **165** |
-| 50000 | batched |     320 | 156,250 |       0 (n/a) |                19 |
-| 50000 | worker  |    1301 |  38,432 |       0 (n/a) |               210 |
+| 10000 | sync    |      33 | 303,030 |       0 (n/a) |            **34** |
+| 10000 | batched |      57 | 175,439 |       0 (n/a) |                17 |
+| 10000 | worker  |      55 | 181,818 |       0 (n/a) |                27 |
+| 10000 | cached  |      37 | 270,270 |       0 (n/a) |                38 |
+| 50000 | sync    |     273 | 183,150 |       0 (n/a) |           **274** |
+| 50000 | batched |     332 | 150,602 |       0 (n/a) |                19 |
+| 50000 | worker  |    1004 |  49,801 |       0 (n/a) |               196 |
+| 50000 | cached  |     624 |  80,128 |       0 (n/a) |           **630** |
 
 ### Takeaways
 
 - **batched** is the best general non-blocking strategy on both engines: zero long
-  tasks (Chromium) and a tiny worst frame gap in Safari (19ms at 50k vs sync's 165ms).
+  tasks (Chromium) and a tiny worst frame gap in Safari (19ms at 50k vs sync's 274ms).
 - **sync** blocks proportionally to count (211ms frozen at 50k in Chromium).
 - **worker** frees raw compute but the `postMessage` copy of many result strings costs
   main-thread time (heavy in WebKit) — prefer batched when returning strings.
-- **cached** is a repeat-render optimization; a cold first run costs the same as sync.
+- **cached** only pays off on repeat renders (warm hits are ~free). These numbers are a
+  **cold** run — every input is a miss, so it's pure overhead: about the same as sync at
+  10k, and slower at 50k where filling and evicting the cache (20k cap) adds work and
+  blocks (409ms / 630ms worst frame gap). Use it when the same inputs re-render, not for
+  a one-shot batch of unique inputs.

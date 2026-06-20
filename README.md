@@ -193,13 +193,15 @@ The browser benchmark drives the playground's **Benchmark** tab via Playwright, 
 
 | count  | mode    | gen   | throughput | long tasks | worst frame gap |
 | ------ | ------- | ----- | ---------- | ---------- | --------------- |
-| 10,000 | sync    | 50ms  | ~198k/s    | 1 (55ms)   | **46ms**        |
-| 10,000 | batched | 54ms  | ~185k/s    | 0          | 9.5ms           |
-| 10,000 | worker  | 113ms | ~89k/s     | 0          | 15.9ms          |
-| 50,000 | sync    | 220ms | ~228k/s    | 1 (225ms)  | **212ms**       |
-| 50,000 | batched | 221ms | ~226k/s    | 0          | 93ms            |
+| 10,000 | sync    | 47ms  | ~211k/s    | 1 (52ms)   | **45ms**        |
+| 10,000 | batched | 50ms  | ~199k/s    | 0          | 9ms             |
+| 10,000 | worker  | 79ms  | ~127k/s    | 0          | 8.9ms           |
+| 10,000 | cached  | 42ms  | ~239k/s    | 0          | 30ms            |
+| 50,000 | sync    | 215ms | ~232k/s    | 1 (221ms)  | **211ms**       |
+| 50,000 | batched | 210ms | ~238k/s    | 0          | 91ms            |
+| 50,000 | cached  | 422ms | ~118k/s    | 1 (428ms)  | **409ms**       |
 
-(Chromium; WebKit shows the same pattern.) **batched** matches sync's raw speed while eliminating long tasks, so the page never blocks; **sync** freezes proportionally to count; **worker** frees raw compute but pays a `postMessage` copy for the returned strings.
+(Chromium; WebKit shows the same pattern.) **batched** matches sync's raw speed while eliminating long tasks, so the page never blocks; **sync** freezes proportionally to count; **worker** frees raw compute but pays a `postMessage` copy for the returned strings; **cached** only helps on repeat renders — a cold run (shown here) is pure overhead, ≈ sync at 10k and worse at 50k from cache fill/eviction.
 
 Run them:
 
