@@ -80,21 +80,35 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
   function runOnWorker(
     worker: Worker,
     inputs: string[],
+    signal: AbortSignal | undefined,
     options?: CreateIdenticonOptions,
     material?: IdenticonWorkerRequest['material'],
   ): Promise<string[]> {
     const id = nextId++
     return new Promise<string[]>((resolve, reject) => {
-      const handler = (event: MessageEvent<IdenticonWorkerResponse>): void => {
+      // Detach both listeners once this job settles so an aborted sibling job
+      // never terminates the shared pool and no stale listener lingers.
+      function cleanup(): void {
+        worker.removeEventListener('message', handler)
+        signal?.removeEventListener('abort', onAbort)
+      }
+      function handler(event: MessageEvent<IdenticonWorkerResponse>): void {
         if (event.data.id !== id)
           return
-        worker.removeEventListener('message', handler)
+        cleanup()
         if (event.data.error)
           reject(new Error(event.data.error))
         else
           resolve(event.data.results ?? [])
       }
+      // Reject only this job; the worker still finishes its slice (result
+      // discarded) but other in-flight dispatches keep their workers.
+      function onAbort(): void {
+        cleanup()
+        reject(abortReason(signal!))
+      }
       worker.addEventListener('message', handler)
+      signal?.addEventListener('abort', onAbort, { once: true })
       const payload: IdenticonWorkerRequest = { id, inputs, options, material }
       worker.postMessage(payload)
     })
@@ -119,22 +133,10 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
       const slice = inputs.slice(i * sliceSize, (i + 1) * sliceSize)
       if (slice.length === 0)
         break
-      jobs.push(runOnWorker(pool[i]!, slice as string[], cloneable, material))
+      jobs.push(runOnWorker(pool[i]!, slice as string[], signal, cloneable, material))
     }
 
-    const settled = Promise.all(jobs).then(parts => parts.flat())
-    if (!signal)
-      return settled
-
-    return Promise.race([
-      settled,
-      new Promise<string[]>((_, reject) => {
-        signal.addEventListener('abort', () => {
-          terminate()
-          reject(abortReason(signal))
-        }, { once: true })
-      }),
-    ])
+    return Promise.all(jobs).then(parts => parts.flat())
   }
 
   return {
