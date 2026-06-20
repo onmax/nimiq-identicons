@@ -105,6 +105,109 @@ const { colors, sections } = getIdenticonsParams(input)
 // sections.face -> Path to the SVG
 ```
 
+## Rendering many identicons (1k–100k+) without blocking
+
+`createIdenticon` is synchronous. Generating thousands in a tight loop runs as one long task and freezes the page. Use one of the following instead.
+
+### Batched (recommended)
+
+`createIdenticons` generates in chunks and yields to the event loop between them, so the page stays responsive. Works identically in Chrome and Safari (it uses `scheduler.yield` where available and falls back to a `MessageChannel` macrotask otherwise).
+
+```ts
+import { createIdenticons } from 'identicons-esm/batch'
+
+const inputs = addresses // string[]
+const controller = new AbortController()
+
+const svgs = await createIdenticons(inputs, {
+  shouldValidateAddress: false,
+  format: 'image/svg+xml',
+  chunkSize: 64, // items per burst (default 64)
+  signal: controller.signal, // optional: cancel between chunks
+  onProgress: (done, total) => console.log(`${done}/${total}`),
+})
+```
+
+Stream results to paint incrementally (pairs well with virtualized lists):
+
+```ts
+import { createIdenticonsStream } from 'identicons-esm/batch'
+
+for await (const { index, value } of createIdenticonsStream(inputs, { shouldValidateAddress: false })) {
+  // insert `value` at `index` as it becomes ready
+}
+```
+
+> Shiny (material) variants share the same APIs: `createShinyIdenticons` (`identicons-esm/batch`), `createShinyIdenticonCached` (`identicons-esm/cache`), and `pool.generateShiny` (`identicons-esm/worker-client`) — same options plus `material`. `yieldToMain()` (from `identicons-esm/batch`), the cooperative yield these helpers use between chunks, is also exported if you need to interleave your own work.
+
+### Web Worker pool (off the main thread)
+
+Generates on worker threads. Best when you can keep results in the worker; returning many strings to the main thread pays a `postMessage` copy cost, so benchmark against the batched approach for your workload.
+
+```ts
+import { createIdenticonWorkerPool } from 'identicons-esm/worker-client'
+
+// In Vite / modern bundlers, the default worker URL resolution works out of the box.
+// If your bundler needs help, pass a factory (Vite example):
+import IdenticonWorker from 'identicons-esm/worker?worker'
+
+const pool = createIdenticonWorkerPool({ createWorker: () => new IdenticonWorker() })
+const svgs = await pool.generate(inputs, { shouldValidateAddress: false })
+pool.terminate()
+```
+
+### Cheaper `<img>` sources
+
+Each `<img>` over 10k+ items is much lighter than inline SVG DOM. For the source you have two options:
+
+- `format: 'image/svg+xml'` → a base64 data URI (default, backwards compatible).
+- An object URL, which skips base64 entirely:
+
+```ts
+import { createIdenticon, identiconToObjectURL, revokeIdenticonObjectURL } from 'identicons-esm'
+
+const url = identiconToObjectURL(createIdenticon(input, { shouldValidateAddress: false, format: 'svg' }))
+img.src = url
+// IMPORTANT: revoke when the image is gone, or the URL leaks
+revokeIdenticonObjectURL(url)
+```
+
+> **Displaying thousands is a separate cost from generating them.** Each identicon shown as an SVG `<img>` makes the browser build an isolated SVG document to rasterize it, and Chromium can only do that on the main thread (`createImageBitmap` rejects SVG) — a few thousand at once will freeze or crash the tab. To put that many on screen, either virtualize (keep only on-screen items in the DOM) or rasterize the SVGs onto a `<canvas>` in small, yielding chunks so the page never blocks. The playground's Benchmark tab does the latter. The library's job is to make each item cheap and async to produce; getting them on screen at scale is the consumer's.
+
+### Caching repeated inputs
+
+Opt-in LRU cache for when the same inputs are rendered repeatedly (re-renders, scrolling back into view). It does nothing for a one-shot batch of unique inputs.
+
+```ts
+import { createIdenticonCache, createIdenticonCached } from 'identicons-esm/cache'
+
+const cache = createIdenticonCache(4096)
+const svg = createIdenticonCached(input, { shouldValidateAddress: false, cache })
+```
+
+### Benchmarks
+
+`makeHash` (the hot path) is now allocation-free and memoizes its inner chaos function, so generation throughput is **~15× higher** than before with byte-identical output (`createIdenticon`: ~1.16M ops/s as a raw SVG string, ~671k ops/s as a base64 data URI).
+
+The browser benchmark drives the playground's **Benchmark** tab via Playwright, measuring each strategy's impact on the main thread. Dev-mode numbers — a production build is faster; the **relative** behavior is the point:
+
+| count  | mode    | gen   | throughput | long tasks | worst frame gap |
+| ------ | ------- | ----- | ---------- | ---------- | --------------- |
+| 10,000 | sync    | 50ms  | ~198k/s    | 1 (55ms)   | **46ms**        |
+| 10,000 | batched | 54ms  | ~185k/s    | 0          | 9.5ms           |
+| 10,000 | worker  | 113ms | ~89k/s     | 0          | 15.9ms          |
+| 50,000 | sync    | 220ms | ~228k/s    | 1 (225ms)  | **212ms**       |
+| 50,000 | batched | 221ms | ~226k/s    | 0          | 93ms            |
+
+(Chromium; WebKit shows the same pattern.) **batched** matches sync's raw speed while eliminating long tasks, so the page never blocks; **sync** freezes proportionally to count; **worker** frees raw compute but pays a `postMessage` copy for the returned strings.
+
+Run them:
+
+- `pnpm --filter identicons-esm bench` — node throughput.
+- `node packages/nimiq-identicons/bench/browser-bench.mjs` (with `pnpm dev` running) — browser long-tasks / frame-blocking across Chromium and WebKit.
+
+Full results: [`packages/nimiq-identicons/bench/RESULTS.md`](./packages/nimiq-identicons/bench/RESULTS.md).
+
 ## Why not just use the V1 version?
 
 We were having issues running the lib in workerd. That's it. But then, when I started looking into it, I discovered that we are there was space for improvements.
