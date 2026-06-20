@@ -34,13 +34,12 @@ export function createShinyIdenticon(rawInput: string, options: CreateShinyIdent
   const input = validateInput(rawInput, options)
   if (!input)
     return identiconPlaceholder
-  const material = options.material
+  let material = options.material
   if (!(['bronze', 'silver', 'gold'] as IdenticonMaterial[]).includes(material)) {
     console.warn(`Invalid material: ${material}. Defaulting to 'bronze'`)
-    options.material = 'bronze'
+    material = 'bronze'
   }
   const params = getIdenticonsParams(input)
-  const svg = assembleShinySvg({ ...params, material: options.material })
-  const formatted = formatIdenticon(svg, options.format)
-  return formatted
+  const svg = assembleShinySvg({ ...params, material })
+  return formatIdenticon(svg, options.format)
 }

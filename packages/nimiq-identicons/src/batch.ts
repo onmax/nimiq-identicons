@@ -69,6 +69,24 @@ function isChunkBoundary(done: number, total: number, chunkSize: number): boolea
   return done % chunkSize === 0 || done === total
 }
 
+// The work done once a chunk completes: report progress, then (unless this was
+// the last item) yield to the event loop and honor the abort signal. Shared by
+// the array and streaming paths — the cheap boundary check stays inline in each
+// loop so only boundaries await, keeping the per-item hot path allocation-free.
+async function onChunkBoundary(
+  done: number,
+  total: number,
+  signal: AbortSignal | undefined,
+  onProgress: CreateIdenticonsOptions['onProgress'],
+): Promise<void> {
+  onProgress?.(done, total)
+  if (done < total) {
+    await yieldToMain()
+    if (signal?.aborted)
+      throw abortReason(signal)
+  }
+}
+
 async function processInChunks(
   total: number,
   produce: (index: number) => void,
@@ -81,15 +99,21 @@ async function processInChunks(
   for (let i = 0; i < total; i++) {
     produce(i)
     const done = i + 1
-    if (isChunkBoundary(done, total, chunkSize)) {
-      onProgress?.(done, total)
-      if (done < total) {
-        await yieldToMain()
-        if (signal?.aborted)
-          throw abortReason(signal)
-      }
-    }
+    if (isChunkBoundary(done, total, chunkSize))
+      await onChunkBoundary(done, total, signal, onProgress)
   }
+}
+
+// Build a results array by producing each input in chunks, preserving order.
+function collectInChunks(
+  inputs: readonly string[],
+  options: Pick<CreateIdenticonsOptions, 'chunkSize' | 'signal' | 'onProgress'>,
+  render: (input: string) => string,
+): Promise<string[]> {
+  const results = Array.from<string>({ length: inputs.length })
+  return processInChunks(inputs.length, (i) => {
+    results[i] = render(inputs[i]!)
+  }, options).then(() => results)
 }
 
 /**
@@ -99,15 +123,11 @@ async function processInChunks(
  * page stays responsive while rendering thousands of identicons. Results are
  * returned in the same order as `inputs`.
  */
-export async function createIdenticons(
+export function createIdenticons(
   inputs: readonly string[],
   options: CreateIdenticonsOptions = {},
 ): Promise<string[]> {
-  const results = Array.from<string>({ length: inputs.length })
-  await processInChunks(inputs.length, (i) => {
-    results[i] = createIdenticon(inputs[i]!, options)
-  }, options)
-  return results
+  return collectInChunks(inputs, options, input => createIdenticon(input, options))
 }
 
 /**
@@ -127,25 +147,15 @@ export async function* createIdenticonsStream(
   for (let i = 0; i < total; i++) {
     yield { index: i, value: createIdenticon(inputs[i]!, options) }
     const done = i + 1
-    if (isChunkBoundary(done, total, chunkSize)) {
-      onProgress?.(done, total)
-      if (done < total) {
-        await yieldToMain()
-        if (signal?.aborted)
-          throw abortReason(signal)
-      }
-    }
+    if (isChunkBoundary(done, total, chunkSize))
+      await onChunkBoundary(done, total, signal, onProgress)
   }
 }
 
 /** Non-blocking batch variant of `createShinyIdenticon`. */
-export async function createShinyIdenticons(
+export function createShinyIdenticons(
   inputs: readonly string[],
   options: CreateShinyIdenticonsOptions,
 ): Promise<string[]> {
-  const results = Array.from<string>({ length: inputs.length })
-  await processInChunks(inputs.length, (i) => {
-    results[i] = createShinyIdenticon(inputs[i]!, options)
-  }, options)
-  return results
+  return collectInChunks(inputs, options, input => createShinyIdenticon(input, options))
 }

@@ -46,10 +46,11 @@ export function createIdenticonCache(maxSize = 4096): IdenticonCache {
   }
 }
 
-function identiconKey(input: string, options: CreateIdenticonOptions): string {
+function identiconKey(input: string, options: CreateIdenticonOptions, material?: string): string {
   const validate = options.shouldValidateAddress === false ? '0' : '1'
   const format = options.format ?? 'image/svg+xml'
-  return `${validate}:${format}:${input}`
+  const base = `${validate}:${format}:${input}`
+  return material === undefined ? base : `${material}:${base}`
 }
 
 // Return the cached value for `key`, or compute it with `produce`, store it, and
@@ -81,6 +82,6 @@ export function createShinyIdenticonCached(
   input: string,
   options: CreateShinyIdenticonOptions & { cache?: IdenticonCache },
 ): string {
-  const key = `${options.material}:${identiconKey(input, options)}`
+  const key = identiconKey(input, options, options.material)
   return withCache(options.cache, key, () => createShinyIdenticon(input, options))
 }

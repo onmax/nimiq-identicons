@@ -38,12 +38,15 @@ function defaultWorker(): Worker {
   return new Worker(new URL('./worker.mjs', import.meta.url), { type: 'module' })
 }
 
-// Only structured-cloneable identicon options survive postMessage; drop chunkSize,
-// signal and onProgress (the latter two are non-cloneable / main-thread only).
+// Only structured-cloneable identicon options survive postMessage. Drop the
+// batch-only fields (chunkSize, and the non-cloneable / main-thread-only signal
+// and onProgress) and forward everything else, so new CreateIdenticonOptions
+// fields reach the worker without updating this list.
 function serializableOptions(options?: CreateIdenticonsOptions): CreateIdenticonOptions | undefined {
   if (!options)
     return undefined
-  return { shouldValidateAddress: options.shouldValidateAddress, format: options.format }
+  const { chunkSize, signal, onProgress, ...rest } = options
+  return rest
 }
 
 /**
