@@ -9,7 +9,7 @@
   "repository": { "type": "git", "url": "git+https://github.com/onmax/nimiq-identicons.git" },
   "bugs": { "url": "https://github.com/onmax/nimiq-identicons/issues" },
   "keywords": [],
-  "sideEffects": false,
+  "sideEffects": ["./dist/worker.mjs", "./src/worker.ts"],
   "exports": {
     ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" },
     "./web-component": { "types": "./dist/web-component.d.mts", "import": "./dist/web-component.mjs" },

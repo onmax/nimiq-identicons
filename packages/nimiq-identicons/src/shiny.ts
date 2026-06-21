@@ -9,6 +9,8 @@ export const materialColors: Record<IdenticonMaterial, [string, string]> = {
   bronze: ['#FCD1BE', '#9E6262'],
 }
 
+const VALID_MATERIALS = new Set<IdenticonMaterial>(['bronze', 'silver', 'gold'])
+
 export function assembleShinySvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top }, innerShadow, backgroundShape, circleShape, material }: ShinyIdenticonParams): string {
   innerShadow ||= defaultShadow
   backgroundShape ||= defaultBackgroundShape
@@ -35,7 +37,7 @@ export function createShinyIdenticon(rawInput: string, options: CreateShinyIdent
   if (!input)
     return identiconPlaceholder
   let material = options.material
-  if (!(['bronze', 'silver', 'gold'] as IdenticonMaterial[]).includes(material)) {
+  if (!VALID_MATERIALS.has(material)) {
     console.warn(`Invalid material: ${material}. Defaulting to 'bronze'`)
     material = 'bronze'
   }

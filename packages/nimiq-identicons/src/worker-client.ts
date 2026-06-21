@@ -96,6 +96,7 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
     worker: Worker,
     inputs: string[],
     signal: AbortSignal | undefined,
+    shiny: boolean,
     options?: CreateIdenticonOptions,
     material?: IdenticonWorkerRequest['material'],
   ): Promise<string[]> {
@@ -144,13 +145,14 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
       worker.addEventListener('error', onError)
       worker.addEventListener('messageerror', onError)
       signal?.addEventListener('abort', onAbort, { once: true })
-      const payload: IdenticonWorkerRequest = { id, inputs, options, material }
+      const payload: IdenticonWorkerRequest = { id, inputs, options, material, shiny }
       worker.postMessage(payload)
     })
   }
 
   function dispatch(
     inputs: readonly string[],
+    shiny: boolean,
     options?: CreateIdenticonsOptions,
     material?: IdenticonWorkerRequest['material'],
   ): Promise<string[]> {
@@ -174,12 +176,12 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
       // batch helpers' per-chunk reporting, since a worker renders its slice in
       // one pass, but it still honors the onProgress contract).
       const job = onProgress
-        ? runOnWorker(pool[i]!, slice as string[], signal, cloneable, material).then((part) => {
+        ? runOnWorker(pool[i]!, slice as string[], signal, shiny, cloneable, material).then((part) => {
             done += part.length
             onProgress(done, total)
             return part
           })
-        : runOnWorker(pool[i]!, slice as string[], signal, cloneable, material)
+        : runOnWorker(pool[i]!, slice as string[], signal, shiny, cloneable, material)
       jobs.push(job)
     }
 
@@ -187,8 +189,8 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
   }
 
   return {
-    generate: (inputs, options) => dispatch(inputs, options),
-    generateShiny: (inputs, options) => dispatch(inputs, options, options.material),
+    generate: (inputs, options) => dispatch(inputs, false, options),
+    generateShiny: (inputs, options) => dispatch(inputs, true, options, options.material),
     terminate,
   }
 }

@@ -7,6 +7,13 @@ export interface IdenticonWorkerRequest {
   inputs: string[]
   options?: CreateIdenticonOptions
   material?: IdenticonMaterial
+  /**
+   * Whether to render shiny identicons. Carried explicitly (not inferred from
+   * `material` being set) so an invalid/falsy material still routes through
+   * `createShinyIdenticon` and gets normalized to bronze — matching the
+   * main-thread `createShinyIdenticons` path exactly.
+   */
+  shiny?: boolean
 }
 
 export interface IdenticonWorkerResponse {
@@ -22,11 +29,17 @@ const ctx = globalThis as unknown as {
 }
 
 ctx.onmessage = (event) => {
-  const { id, inputs, options, material } = event.data
+  const { id, inputs, options, material, shiny } = event.data
   try {
-    const results = material
-      ? inputs.map(input => createShinyIdenticon(input, { ...options, material }))
-      : inputs.map(input => createIdenticon(input, options))
+    let results: string[]
+    if (shiny) {
+      // Merge the material once, not per input.
+      const shinyOptions = { ...options, material: material as IdenticonMaterial }
+      results = inputs.map(input => createShinyIdenticon(input, shinyOptions))
+    }
+    else {
+      results = inputs.map(input => createIdenticon(input, options))
+    }
     ctx.postMessage({ id, results })
   }
   catch (error) {
