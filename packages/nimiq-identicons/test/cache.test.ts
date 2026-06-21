@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { createIdenticonCache, createIdenticonCached } from '../src/cache.js'
+import { createIdenticonCache, createIdenticonCached, createShinyIdenticonCached } from '../src/cache.js'
 import { createIdenticon } from '../src/index.js'
+import { createShinyIdenticon } from '../src/shiny.js'
 
 const opt = { shouldValidateAddress: false } as const
 
@@ -26,6 +27,32 @@ describe('identicon cache', () => {
     expect(cache.size).toBe(2)
     expect(cache.has('0:image/svg+xml:a')).toBe(false)
     expect(cache.has('0:image/svg+xml:c')).toBe(true)
+  })
+
+  it('maxSize 0 disables caching instead of capping at one entry', () => {
+    const cache = createIdenticonCache(0)
+    createIdenticonCached('a', { ...opt, cache })
+    createIdenticonCached('b', { ...opt, cache })
+    expect(cache.size).toBe(0)
+  })
+
+  it('namespaces shiny keys so they never collide with plain keys in a shared cache', () => {
+    const cache = createIdenticonCache()
+    const plain = createIdenticonCached('nimiq', { ...opt, cache })
+    const shiny = createShinyIdenticonCached('nimiq', { ...opt, material: 'gold', cache })
+    expect(shiny).toBe(createShinyIdenticon('nimiq', { ...opt, material: 'gold' }))
+    expect(shiny).not.toBe(plain)
+    // Both keys coexist and each still returns its own output.
+    expect(createIdenticonCached('nimiq', { ...opt, cache })).toBe(plain)
+    expect(createShinyIdenticonCached('nimiq', { ...opt, material: 'gold', cache })).toBe(shiny)
+  })
+
+  it('shiny with omitted material does not alias a plain identicon in a shared cache', () => {
+    const cache = createIdenticonCache()
+    const plain = createIdenticonCached('nimiq', { ...opt, cache })
+    // Simulate a JS caller that omits the (type-required) material.
+    const shiny = createShinyIdenticonCached('nimiq', { ...opt, cache } as Parameters<typeof createShinyIdenticonCached>[1])
+    expect(shiny).not.toBe(plain)
   })
 
   it('refreshes recency on a hit', () => {

@@ -37,6 +37,22 @@ describe('createIdenticons', () => {
     controller.abort()
     await expect(createIdenticons(inputs, { ...opt, signal: controller.signal })).rejects.toMatchObject({ name: 'AbortError' })
   })
+
+  it('treats chunkSize 0 as the default so it still yields and honors mid-flight abort', async () => {
+    const controller = new AbortController()
+    const promise = createIdenticons(inputs, {
+      ...opt,
+      chunkSize: 0, // would disable all yielding/abort checks if not normalized
+      signal: controller.signal,
+      onProgress: () => controller.abort(),
+    })
+    await expect(promise).rejects.toMatchObject({ name: 'AbortError' })
+  })
+
+  it('produces correct output with chunkSize 0', async () => {
+    const expected = inputs.map(i => createIdenticon(i, opt))
+    expect(await createIdenticons(inputs, { ...opt, chunkSize: 0 })).toEqual(expected)
+  })
 })
 
 describe('createIdenticonsStream', () => {

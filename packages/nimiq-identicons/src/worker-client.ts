@@ -12,14 +12,18 @@ export interface WorkerPoolOptions {
 
   /**
    * Factory for creating a worker. Override this if the default URL resolution
-   * does not work with your bundler. The canonical form is:
+   * does not work with your bundler. With Vite, the `?worker` suffix is the
+   * most robust form (it bundles the worker and its chunks for you):
    *
    * ```ts
-   * createWorker: () => new Worker(
-   *   new URL('identicons-esm/worker', import.meta.url),
-   *   { type: 'module' },
-   * )
+   * import IdenticonWorker from 'identicons-esm/worker?worker'
+   *
+   * createWorker: () => new IdenticonWorker()
    * ```
+   *
+   * For other bundlers, point a `new URL(..., import.meta.url)` at the package's
+   * built worker file (a bare specifier like `'identicons-esm/worker'` does NOT
+   * resolve through `new URL`, so it must be a path your bundler can locate).
    */
   createWorker?: () => Worker
 }
@@ -39,9 +43,10 @@ function defaultWorker(): Worker {
 }
 
 // Only structured-cloneable identicon options survive postMessage. Drop the
-// batch-only fields (chunkSize, and the non-cloneable / main-thread-only signal
-// and onProgress) and forward everything else, so new CreateIdenticonOptions
-// fields reach the worker without updating this list.
+// batch-only fields (chunkSize — which has no effect here since each worker
+// renders its slice in one synchronous pass — and the non-cloneable /
+// main-thread-only signal and onProgress) and forward everything else, so new
+// CreateIdenticonOptions fields reach the worker without updating this list.
 function serializableOptions(options?: CreateIdenticonsOptions): CreateIdenticonOptions | undefined {
   if (!options)
     return undefined
@@ -67,6 +72,9 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
 
   let workers: Worker[] = []
   let nextId = 0
+  // Cancellers for jobs that haven't settled yet. terminate() drains this so no
+  // in-flight promise is left hanging once its worker is killed.
+  const pending = new Set<() => void>()
 
   function getWorkers(): Worker[] {
     if (workers.length === 0)
@@ -75,6 +83,10 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
   }
 
   function terminate(): void {
+    // Reject in-flight jobs first (snapshot, since each canceller mutates the
+    // set), then kill the workers — otherwise those promises never settle.
+    for (const cancel of [...pending])
+      cancel()
     for (const worker of workers)
       worker.terminate()
     workers = []
@@ -89,20 +101,32 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
   ): Promise<string[]> {
     const id = nextId++
     return new Promise<string[]>((resolve, reject) => {
-      // Detach both listeners once this job settles so an aborted sibling job
+      // Detach every listener once this job settles so an aborted sibling job
       // never terminates the shared pool and no stale listener lingers.
       function cleanup(): void {
         worker.removeEventListener('message', handler)
+        worker.removeEventListener('error', onError)
+        worker.removeEventListener('messageerror', onError)
         signal?.removeEventListener('abort', onAbort)
+        pending.delete(cancel)
       }
       function handler(event: MessageEvent<IdenticonWorkerResponse>): void {
         if (event.data.id !== id)
           return
         cleanup()
-        if (event.data.error)
+        // Check presence, not truthiness: an empty error string still means the
+        // worker failed, and must reject rather than resolve with no results.
+        if (event.data.error !== undefined)
           reject(new Error(event.data.error))
         else
           resolve(event.data.results ?? [])
+      }
+      // A worker that fails to load its module, or posts an uncloneable message,
+      // fires 'error'/'messageerror' and never a matching 'message'. Without
+      // this the job promise would hang forever.
+      function onError(event: Event): void {
+        cleanup()
+        reject(new Error((event as ErrorEvent).message || 'Identicon worker error'))
       }
       // Reject only this job; the worker still finishes its slice (result
       // discarded) but other in-flight dispatches keep their workers.
@@ -110,7 +134,15 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
         cleanup()
         reject(abortReason(signal!))
       }
+      // Settle this job when terminate() is called mid-flight.
+      function cancel(): void {
+        cleanup()
+        reject(new Error('Identicon worker pool terminated'))
+      }
+      pending.add(cancel)
       worker.addEventListener('message', handler)
+      worker.addEventListener('error', onError)
+      worker.addEventListener('messageerror', onError)
       signal?.addEventListener('abort', onAbort, { once: true })
       const payload: IdenticonWorkerRequest = { id, inputs, options, material }
       worker.postMessage(payload)
@@ -122,7 +154,7 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
     options?: CreateIdenticonsOptions,
     material?: IdenticonWorkerRequest['material'],
   ): Promise<string[]> {
-    const { signal } = options ?? {}
+    const { signal, onProgress } = options ?? {}
     if (signal?.aborted)
       return Promise.reject(abortReason(signal))
     if (inputs.length === 0)
@@ -131,12 +163,24 @@ export function createIdenticonWorkerPool(options: WorkerPoolOptions = {}): Iden
     const pool = getWorkers()
     const sliceSize = Math.ceil(inputs.length / pool.length)
     const cloneable = serializableOptions(options)
+    const total = inputs.length
+    let done = 0
     const jobs: Promise<string[]>[] = []
     for (let i = 0; i < pool.length; i++) {
       const slice = inputs.slice(i * sliceSize, (i + 1) * sliceSize)
       if (slice.length === 0)
         break
-      jobs.push(runOnWorker(pool[i]!, slice as string[], signal, cloneable, material))
+      // Report progress per slice as each worker finishes (coarser than the
+      // batch helpers' per-chunk reporting, since a worker renders its slice in
+      // one pass, but it still honors the onProgress contract).
+      const job = onProgress
+        ? runOnWorker(pool[i]!, slice as string[], signal, cloneable, material).then((part) => {
+            done += part.length
+            onProgress(done, total)
+            return part
+          })
+        : runOnWorker(pool[i]!, slice as string[], signal, cloneable, material)
+      jobs.push(job)
     }
 
     return Promise.all(jobs).then(parts => parts.flat())

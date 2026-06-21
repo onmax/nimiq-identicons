@@ -69,6 +69,14 @@ function isChunkBoundary(done: number, total: number, chunkSize: number): boolea
   return done % chunkSize === 0 || done === total
 }
 
+// Normalize chunkSize: anything that isn't a positive integer (0, negative,
+// NaN, fractional) would break the boundary check — `done % 0` is NaN, so no
+// boundary is ever hit and the whole batch runs as one blocking, unabortable
+// task — so fall back to the default and floor fractions.
+function resolveChunkSize(chunkSize?: number): number {
+  return typeof chunkSize === 'number' && chunkSize >= 1 ? Math.floor(chunkSize) : DEFAULT_CHUNK_SIZE
+}
+
 // The work done once a chunk completes: report progress, then (unless this was
 // the last item) yield to the event loop and honor the abort signal. Shared by
 // the array and streaming paths — the cheap boundary check stays inline in each
@@ -92,7 +100,8 @@ async function processInChunks(
   produce: (index: number) => void,
   options: Pick<CreateIdenticonsOptions, 'chunkSize' | 'signal' | 'onProgress'>,
 ): Promise<void> {
-  const { chunkSize = DEFAULT_CHUNK_SIZE, signal, onProgress } = options
+  const { signal, onProgress } = options
+  const chunkSize = resolveChunkSize(options.chunkSize)
   if (signal?.aborted)
     throw abortReason(signal)
 
@@ -139,7 +148,8 @@ export async function* createIdenticonsStream(
   inputs: readonly string[],
   options: CreateIdenticonsOptions = {},
 ): AsyncGenerator<{ index: number, value: string }, void> {
-  const { chunkSize = DEFAULT_CHUNK_SIZE, signal, onProgress } = options
+  const { signal, onProgress } = options
+  const chunkSize = resolveChunkSize(options.chunkSize)
   if (signal?.aborted)
     throw abortReason(signal)
 

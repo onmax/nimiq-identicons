@@ -49,6 +49,9 @@ const liveTicks = ref(0)
 let cache = createIdenticonCache(20000)
 let pool: IdenticonWorkerPool | undefined
 let objectUrls: string[] = []
+// Cancels the in-flight run on unmount (or could be wired to a stop button), so
+// async batch/worker work doesn't keep running and writing to a dead component.
+let runController: AbortController | undefined
 
 function getPool(): IdenticonWorkerPool {
   if (!pool)
@@ -84,6 +87,8 @@ async function run(): Promise<void> {
   progress.value = 0
   revokeOldUrls()
   sources.value = []
+  const controller = new AbortController()
+  runController = controller
 
   const n = count.value
   const inputs = makeInputs(n)
@@ -138,6 +143,7 @@ async function run(): Promise<void> {
         svgs = await createIdenticons(inputs, {
           ...baseOptions,
           chunkSize: chunkSize.value,
+          signal: controller.signal,
           // Throttle reactive writes so progress UI churn doesn't pollute the
           // responsiveness measurement.
           onProgress: (done) => {
@@ -147,7 +153,7 @@ async function run(): Promise<void> {
         })
         break
       case 'worker':
-        svgs = await getPool().generate(inputs, baseOptions)
+        svgs = await getPool().generate(inputs, { ...baseOptions, signal: controller.signal })
         progress.value = n
         break
       case 'cached':
@@ -156,6 +162,11 @@ async function run(): Promise<void> {
         progress.value = n
         break
     }
+    // Aborted mid-run (component unmounted): don't touch refs or create object
+    // URLs on a dead component — that would leak past onUnmounted's revoke.
+    if (controller.signal.aborted)
+      return
+
     const elapsed = performance.now() - start
     genTime.value = Number(elapsed.toFixed(1))
     throughput.value = Math.round(n / (elapsed / 1000))
@@ -180,10 +191,18 @@ async function run(): Promise<void> {
       worstFrameGap: worstFrameGap.value,
     }
   }
+  catch (error) {
+    // A run cancelled via the abort signal is expected — swallow it; rethrow
+    // anything else.
+    if ((error as { name?: string })?.name !== 'AbortError')
+      throw error
+  }
   finally {
     stopFrames = true
     observer?.disconnect()
     running.value = false
+    if (runController === controller)
+      runController = undefined
   }
 }
 
@@ -193,6 +212,7 @@ function clearCache(): void {
 }
 
 onUnmounted(() => {
+  runController?.abort()
   revokeOldUrls()
   pool?.terminate()
 })

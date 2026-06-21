@@ -31,6 +31,9 @@ export function createIdenticonCache(maxSize = 4096): IdenticonCache {
       return value
     },
     set(key, value) {
+      // maxSize < 1 means "no caching": store nothing rather than capping at 1.
+      if (maxSize < 1)
+        return
       if (map.has(key))
         map.delete(key)
       else if (map.size >= maxSize)
@@ -46,11 +49,10 @@ export function createIdenticonCache(maxSize = 4096): IdenticonCache {
   }
 }
 
-function identiconKey(input: string, options: CreateIdenticonOptions, material?: string): string {
+function identiconKey(input: string, options: CreateIdenticonOptions): string {
   const validate = options.shouldValidateAddress === false ? '0' : '1'
   const format = options.format ?? 'image/svg+xml'
-  const base = `${validate}:${format}:${input}`
-  return material === undefined ? base : `${material}:${base}`
+  return `${validate}:${format}:${input}`
 }
 
 // Return the cached value for `key`, or compute it with `produce`, store it, and
@@ -82,6 +84,9 @@ export function createShinyIdenticonCached(
   input: string,
   options: CreateShinyIdenticonOptions & { cache?: IdenticonCache },
 ): string {
-  const key = identiconKey(input, options, options.material)
+  // Always namespace shiny keys with the material so they can never collide with
+  // a plain identicon's key in a shared cache — including when material is
+  // absent (`shiny:undefined:...`), which would otherwise alias a plain key.
+  const key = `shiny:${options.material}:${identiconKey(input, options)}`
   return withCache(options.cache, key, () => createShinyIdenticon(input, options))
 }
