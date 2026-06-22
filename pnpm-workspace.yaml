@@ -25,6 +25,7 @@ catalog:
   nimiq-css: ^0.3.0
   npm-run-all2: ^7.0.2
   pathe: ^2.0.3
+  playwright: ^1.61.0
   pnpm: ^10.9.0
   radix-vue: ^1.9.14
   simple-git-hooks: ^2.13.0

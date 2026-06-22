@@ -41,6 +41,7 @@
     "eslint": "catalog:",
     "lint-staged": "catalog:",
     "pathe": "catalog:",
+    "playwright": "catalog:",
     "pnpm": "catalog:",
     "simple-git-hooks": "catalog:",
     "typescript": "catalog:",

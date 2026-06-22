@@ -1,6 +1,5 @@
 import type { CreateShinyIdenticonOptions, IdenticonMaterial, ShinyIdenticonParams } from './types.js'
-import { defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams, validateInput } from './core.js'
-import { identiconPlaceholder } from './index.js'
+import { defaultCircleShape, defaultShadow, formatIdenticon, getIdenticonsParams, identiconPlaceholder, validateInput } from './core.js'
 
 export const defaultBackgroundShape = `<path d="m126.072 8.437 31.956 55.003a15.918 15.918 0 0 1 2.158 7.999c0 2.808-.745 5.566-2.158 7.998l-31.956 55.003c-2.867 4.949-8.183 7.998-13.933 7.998H48.224c-5.75 0-11.066-3.049-13.933-7.998L2.336 79.437a15.96 15.96 0 0 1-2.15-7.998c0-2.808.741-5.566 2.15-7.999l31.96-55.003a16.047 16.047 0 0 1 5.889-5.854A16.173 16.173 0 0 1 48.229.438h63.91c5.75 0 11.066 3.05 13.933 7.999Z" />`
 
@@ -9,6 +8,8 @@ export const materialColors: Record<IdenticonMaterial, [string, string]> = {
   silver: ['#ECF5FC', '#BEC8D3'],
   bronze: ['#FCD1BE', '#9E6262'],
 }
+
+const VALID_MATERIALS = new Set<IdenticonMaterial>(['bronze', 'silver', 'gold'])
 
 export function assembleShinySvg({ colors: { accent, background, main }, sections: { bottom, face, sides, top }, innerShadow, backgroundShape, circleShape, material }: ShinyIdenticonParams): string {
   innerShadow ||= defaultShadow
@@ -35,13 +36,12 @@ export function createShinyIdenticon(rawInput: string, options: CreateShinyIdent
   const input = validateInput(rawInput, options)
   if (!input)
     return identiconPlaceholder
-  const material = options.material
-  if (!(['bronze', 'silver', 'gold'] as IdenticonMaterial[]).includes(material)) {
+  let material = options.material
+  if (!VALID_MATERIALS.has(material)) {
     console.warn(`Invalid material: ${material}. Defaulting to 'bronze'`)
-    options.material = 'bronze'
+    material = 'bronze'
   }
   const params = getIdenticonsParams(input)
-  const svg = assembleShinySvg({ ...params, material: options.material })
-  const formatted = formatIdenticon(svg, options.format)
-  return formatted
+  const svg = assembleShinySvg({ ...params, material })
+  return formatIdenticon(svg, options.format)
 }

@@ -9,19 +9,24 @@
   "repository": { "type": "git", "url": "git+https://github.com/onmax/nimiq-identicons.git" },
   "bugs": { "url": "https://github.com/onmax/nimiq-identicons/issues" },
   "keywords": [],
-  "sideEffects": false,
+  "sideEffects": ["./dist/worker.mjs", "./src/worker.ts"],
   "exports": {
     ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" },
     "./web-component": { "types": "./dist/web-component.d.mts", "import": "./dist/web-component.mjs" },
     "./shiny": { "types": "./dist/shiny.d.mts", "import": "./dist/shiny.mjs" },
     "./shiny-web-component": { "types": "./dist/shiny-web-component.d.mts", "import": "./dist/shiny-web-component.mjs" },
     "./types": { "types": "./dist/types.d.mts", "import": "./dist/types.mjs" },
-    "./core": { "types": "./dist/core.d.mts", "import": "./dist/core.mjs" }
+    "./core": { "types": "./dist/core.d.mts", "import": "./dist/core.mjs" },
+    "./batch": { "types": "./dist/batch.d.mts", "import": "./dist/batch.mjs" },
+    "./cache": { "types": "./dist/cache.d.mts", "import": "./dist/cache.mjs" },
+    "./worker": { "types": "./dist/worker.d.mts", "import": "./dist/worker.mjs" },
+    "./worker-client": { "types": "./dist/worker-client.d.mts", "import": "./dist/worker-client.mjs" }
   },
   "files": ["dist"],
   "scripts": {
     "build": "esno scripts/generate-features.ts && tsdown",
     "dev": "esno scripts/generate-features.ts && tsdown --watch",
+    "bench": "vitest bench",
     "optimize-svg": "esno ./scripts/optimize-features.ts"
   },
   "dependencies": {

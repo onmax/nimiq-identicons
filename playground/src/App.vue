@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDark, useLocalStorage } from '@vueuse/core'
+import BenchmarkDemo from './components/BenchmarkDemo.vue'
 import Builder from './components/Builder.vue'
 import DefaultDemo from './components/DefaultDemo.vue'
 import WebComponentDemo from './components/WebComponentDemo.vue'
@@ -48,11 +49,19 @@ const view = useLocalStorage('view', 'default')
       >
         Web Component
       </button>
+      <button
+        nq-pill-tertiary
+        :class="{ active: view === 'benchmark' }"
+        @click="view = 'benchmark'"
+      >
+        Benchmark
+      </button>
     </div>
 
     <WebComponentDemo v-if="view === 'web-component'" v-model="input" />
     <Builder v-if="view === 'builder'" :input="input" />
     <DefaultDemo v-if="view === 'default'" :input="input" />
+    <BenchmarkDemo v-if="view === 'benchmark'" />
   </main>
 </template>
 
