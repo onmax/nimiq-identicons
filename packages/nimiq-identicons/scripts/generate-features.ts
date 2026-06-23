@@ -18,7 +18,7 @@ async function main() {
 
   for (const file of files.sort()) {
     const content = await readFile(`${featuresDir}/${file}`, 'utf-8')
-    const key = `./features/optimized/${file}`
+    const key = `./features/optimized/${file.replace(/\\/g, '/')}`
     entries.push(`  '${escapeString(key)}': '${escapeString(content.trim())}'`)
   }
 
