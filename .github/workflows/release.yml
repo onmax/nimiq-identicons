@@ -21,10 +21,9 @@ jobs:
         with:
           node-version: lts/*
           cache: pnpm
-          registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm dlx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: pnpm -r publish --access public --no-git-checks --provenance
+      - run: pnpm --filter identicons-esm exec npm publish --access public --provenance
